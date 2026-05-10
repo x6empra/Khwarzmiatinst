@@ -16,6 +16,7 @@ urlpatterns = [
     path("packages/", include("apps.packages.urls")),
     path("api/packages/", include("apps.packages.api_urls")),
     path("api/leads/", include("apps.leads.urls")),
+    path("dashboard/", include("apps.dashboard.urls")),
     path("", include("apps.core.urls")),
     # API schema (drf-spectacular)
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

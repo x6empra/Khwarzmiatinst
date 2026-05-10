@@ -1,0 +1,63 @@
+{% extends "dashboard/base.html" %}
+
+{% block dash_title %}الباقات{% endblock %}
+
+{% block dash_content %}
+  <header class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-black text-primary md:text-3xl">إدارة الباقات</h1>
+      <p class="mt-1 text-sm text-neutral-700">عرض الباقات وإحصاءات الطلبات لكل باقة.</p>
+    </div>
+    <a href="/admin/packages/package/add/" class="btn-primary text-sm">+ إضافة باقة</a>
+  </header>
+
+  {% if packages %}
+    <div class="overflow-hidden rounded-lg bg-white shadow-md">
+      <table class="w-full">
+        <thead class="bg-neutral-100 text-right text-sm">
+          <tr>
+            <th class="px-4 py-3 font-bold text-primary">الترتيب</th>
+            <th class="px-4 py-3 font-bold text-primary">الاسم</th>
+            <th class="px-4 py-3 font-bold text-primary">السعر</th>
+            <th class="px-4 py-3 font-bold text-primary">المدة</th>
+            <th class="px-4 py-3 font-bold text-primary">عدد الطلبات</th>
+            <th class="px-4 py-3 font-bold text-primary">الحالة</th>
+            <th class="px-4 py-3 font-bold text-primary">إجراء</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pkg in packages %}
+            <tr class="border-t border-neutral-100 text-sm">
+              <td class="px-4 py-3 text-neutral-700">{{ pkg.display_order }}</td>
+              <td class="px-4 py-3 font-bold text-primary">
+                {{ pkg.name }}
+                {% if pkg.is_featured %}<span class="text-xs text-accent">⭐</span>{% endif %}
+              </td>
+              <td class="px-4 py-3 text-neutral-900">{{ pkg.price|floatformat:0 }} ر.س</td>
+              <td class="px-4 py-3 text-neutral-700">{{ pkg.duration_months }} شهر</td>
+              <td class="px-4 py-3 text-neutral-900">{{ pkg.leads_count }}</td>
+              <td class="px-4 py-3">
+                {% if pkg.is_active %}
+                  <span class="badge-status-closed">منشورة</span>
+                {% else %}
+                  <span class="badge-status-cancelled">مخفية</span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-3">
+                <a href="/admin/packages/package/{{ pkg.id }}/change/" class="text-sm font-bold text-accent hover:text-accent-dark">
+                  تعديل
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="card text-center py-12" role="status">
+      <p class="text-4xl mb-2" aria-hidden="true">📦</p>
+      <p class="font-bold text-primary">لا توجد باقات</p>
+      <a href="/admin/packages/package/add/" class="mt-3 inline-block btn-primary text-sm">إضافة أول باقة</a>
+    </div>
+  {% endif %}
+{% endblock %}

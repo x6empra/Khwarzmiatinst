@@ -13,9 +13,17 @@ from __future__ import annotations
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import render
 from django_ratelimit.decorators import ratelimit
+from rest_framework import filters, generics, status as drf_status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from apps.accounts.permissions import IsManager, IsSupervisor
 
 from .forms import LeadForm
+from .models import Lead, LeadStatus
 from .recaptcha import verify_recaptcha
+from .serializers import LeadListSerializer, LeadStatusUpdateSerializer
 
 
 def _client_ip(request: HttpRequest) -> str | None:
@@ -83,3 +91,67 @@ def lead_create(request: HttpRequest) -> HttpResponse:
         {"success": True, "message": "تم استلام طلبك بنجاح ✓ سنتواصل معك", "lead_id": lead.id},
         status=201,
     )
+
+
+# ── DRF endpoints لـ Dashboard (F5 + F6) ────────────────────────────────────
+
+
+class LeadListAPIView(generics.ListAPIView):
+    """GET /api/leads/ — IsSupervisor (API.md §Leads)."""
+
+    serializer_class = LeadListSerializer
+    permission_classes = [IsAuthenticated, IsSupervisor]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["name", "phone", "email", "notes"]
+    ordering_fields = ["created_at", "status", "name"]
+    ordering = ["-created_at"]
+
+    def get_queryset(self):
+        qs = Lead.objects.select_related("package", "investor").all()
+        status_filter = self.request.query_params.get("status")
+        if status_filter:
+            qs = qs.filter(status=status_filter)
+        package_filter = self.request.query_params.get("package")
+        if package_filter:
+            qs = qs.filter(package_id=package_filter)
+        return qs
+
+
+class LeadStatusUpdateAPIView(APIView):
+    """PATCH /api/leads/<id>/status/ — IsSupervisor.
+    إلغاء (cancelled) → IsManager فقط.
+    """
+
+    permission_classes = [IsAuthenticated, IsSupervisor]
+
+    def patch(self, request, pk: int):
+        try:
+            lead = Lead.objects.get(pk=pk)
+        except Lead.DoesNotExist:
+            return Response({"detail": "غير موجود"}, status=drf_status.HTTP_404_NOT_FOUND)
+
+        serializer = LeadStatusUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        new_status = serializer.validated_data["status"]
+        note = serializer.validated_data.get("note", "")
+
+        # cancellation → Manager only
+        if new_status == LeadStatus.CANCELLED and not getattr(request.user, "is_manager", False):
+            return Response(
+                {"detail": "إلغاء الطلب صلاحية المدير فقط."},
+                status=drf_status.HTTP_403_FORBIDDEN,
+            )
+
+        if new_status != lead.status:
+            lead.update_status(new_status, changed_by=request.user, note=note)
+
+        return Response(LeadListSerializer(lead).data, status=drf_status.HTTP_200_OK)
+
+
+class LeadDeleteAPIView(generics.DestroyAPIView):
+    """DELETE /api/leads/<id>/ — IsManager only."""
+
+    queryset = Lead.objects.all()
+    permission_classes = [IsAuthenticated, IsManager]
+    lookup_field = "pk"

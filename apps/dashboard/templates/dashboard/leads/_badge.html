@@ -1,0 +1,10 @@
+{# Status badge — DESIGN_GUIDE.md §Status Pipeline #}
+{% if status == 'new' %}
+  <span class="badge-status-new">🟠 {{ display }}</span>
+{% elif status == 'in_progress' %}
+  <span class="badge-status-progress">🔵 {{ display }}</span>
+{% elif status == 'closed' %}
+  <span class="badge-status-closed">🟢 {{ display }}</span>
+{% elif status == 'cancelled' %}
+  <span class="badge-status-cancelled">❌ {{ display }}</span>
+{% endif %}

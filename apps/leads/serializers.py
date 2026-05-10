@@ -29,9 +29,11 @@ class LeadCreateSerializer(serializers.ModelSerializer):
 
 
 class LeadListSerializer(serializers.ModelSerializer):
-    """Used by GET /api/leads/ (Supervisor/Manager) — placeholder for F5."""
+    """GET /api/leads/ — IsSupervisor (API.md §Leads)."""
 
-    package = PackageSerializer(read_only=True)
+    package_name = serializers.CharField(source="package.name", read_only=True)
+    status_display = serializers.CharField(source="get_status_display", read_only=True)
+    investor_email = serializers.SerializerMethodField()
 
     class Meta:
         model = Lead
@@ -41,10 +43,25 @@ class LeadListSerializer(serializers.ModelSerializer):
             "phone",
             "email",
             "package",
+            "package_name",
             "investor",
+            "investor_email",
             "status",
+            "status_display",
             "notes",
             "created_at",
             "updated_at",
         )
         read_only_fields = fields
+
+    def get_investor_email(self, obj: Lead) -> str | None:
+        return obj.investor.email if obj.investor_id else None
+
+
+class LeadStatusUpdateSerializer(serializers.Serializer):
+    """PATCH /api/leads/<id>/status/."""
+
+    status = serializers.ChoiceField(
+        choices=[("new", "new"), ("in_progress", "in_progress"), ("closed", "closed"), ("cancelled", "cancelled")]
+    )
+    note = serializers.CharField(required=False, allow_blank=True, max_length=500)

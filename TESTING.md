@@ -277,8 +277,8 @@ jobs:
 | F2 — Packages | 24 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
 | F3 — Lead Form | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
 | F4 — Auth | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
-| F5 — Dashboard | — | — | — | ⏳ |
-| F6 — Status Pipeline | — | — | — | ⏳ |
+| F5 — Dashboard | 22 ✅ | — | ⏳ | ✅ pages + auth + filter |
+| F6 — Status Pipeline | 21 ✅ | — | ⏳ | ✅ model + API + HTMX + audit |
 | F7 — Signals | 14 ✅ | — | ⏳ | ✅ telegram + tasks + signals |
 | F8 — reCAPTCHA | 6 ✅ | — | ⏳ | ✅ utility + integration |
 | F9 — Profile | — | — | — | ⏳ |

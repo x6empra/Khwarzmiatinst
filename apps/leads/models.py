@@ -5,7 +5,7 @@ See DATABASE.md §4 (status pipeline + indexes + on_delete behavior).
 
 from django.conf import settings
 from django.core.validators import MinLengthValidator
-from django.db import models
+from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
 from apps.core.validators import phone_validator
@@ -82,3 +82,69 @@ class Lead(models.Model):
     @property
     def is_new(self) -> bool:
         return self.status == LeadStatus.NEW
+
+    @transaction.atomic
+    def update_status(self, new_status: str, *, changed_by=None, note: str = "") -> "StatusHistory":
+        """
+        يحدّث الحالة + يكتب سجل التتبع (audit trail) — F6.
+        يرفع ValueError لو new_status غير صالحة.
+        """
+        valid = {c[0] for c in LeadStatus.choices}
+        if new_status not in valid:
+            raise ValueError(f"حالة غير صالحة: {new_status}")
+
+        old = self.status
+        self.status = new_status
+        self.save(update_fields=["status", "updated_at"])
+
+        return StatusHistory.objects.create(
+            lead=self,
+            from_status=old,
+            to_status=new_status,
+            changed_by=changed_by,
+            note=note,
+        )
+
+
+class StatusHistory(models.Model):
+    """Audit trail لكل تغيير حالة — DATABASE.md §5."""
+
+    lead = models.ForeignKey(
+        Lead,
+        on_delete=models.CASCADE,
+        related_name="history",
+        verbose_name=_("الطلب"),
+    )
+    from_status = models.CharField(
+        _("الحالة السابقة"),
+        max_length=20,
+        choices=LeadStatus.choices,
+        null=True,
+        blank=True,
+    )
+    to_status = models.CharField(
+        _("الحالة الجديدة"),
+        max_length=20,
+        choices=LeadStatus.choices,
+    )
+    changed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="status_changes",
+        verbose_name=_("غيّر بواسطة"),
+    )
+    changed_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    note = models.TextField(_("ملاحظة التغيير"), blank=True, default="")
+
+    class Meta:
+        verbose_name = _("سجل تغيير حالة")
+        verbose_name_plural = _("سجلات تغيير الحالة")
+        ordering = ["-changed_at"]
+        indexes = [
+            models.Index(fields=["lead", "-changed_at"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"#{self.lead_id}: {self.from_status} → {self.to_status}"

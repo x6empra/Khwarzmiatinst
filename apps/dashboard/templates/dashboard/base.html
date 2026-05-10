@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% block dash_title %}لوحة الإدارة{% endblock %} — خوارزميات{% endblock %}
+
+{% block content %}
+  <div class="grid gap-6 lg:grid-cols-[260px_1fr]">
+    {# Sidebar #}
+    <aside class="lg:sticky lg:top-6 lg:h-fit">
+      <div class="rounded-lg bg-primary p-6 text-white shadow-md">
+        <p class="mb-1 text-xs opacity-80">مرحباً، {{ user.first_name }}</p>
+        <p class="text-sm font-bold">{{ user.get_role_display }}</p>
+      </div>
+
+      <nav class="mt-4 rounded-lg bg-white p-2 shadow-md" aria-label="قائمة لوحة الإدارة">
+        <ul class="space-y-1">
+          <li>
+            <a href="{% url 'dashboard:home' %}"
+               class="block rounded-md px-4 py-2 text-sm font-bold transition
+                      {% if request.resolver_match.url_name == 'home' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
+              📊 الرئيسية
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'dashboard:leads' %}"
+               class="block rounded-md px-4 py-2 text-sm font-bold transition
+                      {% if request.resolver_match.url_name == 'leads' or request.resolver_match.url_name == 'lead_detail' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
+              📝 الطلبات
+            </a>
+          </li>
+          {% if user.is_manager %}
+            <li>
+              <a href="{% url 'dashboard:packages' %}"
+                 class="block rounded-md px-4 py-2 text-sm font-bold transition
+                        {% if request.resolver_match.url_name == 'packages' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
+                📦 الباقات
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'dashboard:users' %}"
+                 class="block rounded-md px-4 py-2 text-sm font-bold transition
+                        {% if request.resolver_match.url_name == 'users' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
+                👥 المستخدمون
+              </a>
+            </li>
+          {% endif %}
+          <li class="border-t border-neutral-100 pt-2 mt-2">
+            <a href="/admin/"
+               class="block rounded-md px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
+              ⚙️ Django Admin
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    {# Main content #}
+    <main>{% block dash_content %}{% endblock %}</main>
+  </div>
+{% endblock %}

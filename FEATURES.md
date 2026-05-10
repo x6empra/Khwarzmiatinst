@@ -10,8 +10,8 @@
 | **F2** | عرض الباقات (Packages Display) | Must | Phase 1 | ✅ |
 | **F3** | نموذج حجز ذكي (AJAX — بدون reload) | Must | Phase 1 | ✅ |
 | **F4** | تسجيل/دخول المستثمر | Must | Phase 1 | ✅ |
-| **F5** | لوحة تحكم الإدارة (Admin Dashboard) | Must | Phase 1 | ⏳ |
-| **F6** | تحديث حالة الطلب (Status Pipeline) | Must | Phase 1 | ⏳ |
+| **F5** | لوحة تحكم الإدارة (Admin Dashboard) | Must | Phase 1 | ✅ |
+| **F6** | تحديث حالة الطلب (Status Pipeline) | Must | Phase 1 | ✅ |
 | **F7** | إشعارات فورية للإدارة (Django Signals) | Must | Phase 1 | ✅ |
 | **F8** | حماية reCAPTCHA على نموذج الحجز | Must | Phase 1 | ✅ |
 
@@ -84,19 +84,25 @@
 - ✅ Tests: 35 اختبار (models + forms + views + permissions).
 - ⏳ تأكيد الإيميل + استعادة كلمة المرور — تأجَّلت لتكامل allauth في المرحلة 7.
 
-### F5 — Admin Dashboard
-- `/dashboard/` — نظرة عامة (إحصائيات + آخر 5 طلبات).
-- `/dashboard/leads/` — جدول كل الطلبات + فلترة.
-- `/dashboard/packages/` — إدارة الباقات (Manager only).
-- `/dashboard/users/` — إدارة المستخدمين (Manager only).
-- **Permission**: Supervisor + Manager.
+### F5 — Admin Dashboard ✅
+- ✅ `/dashboard/` — overview بإحصائيات (الإجمالي + 4 حالات + آخر 5 طلبات).
+- ✅ `/dashboard/leads/` — جدول + فلترة بالحالة + بحث (الاسم/الجوال/الإيميل).
+- ✅ `/dashboard/leads/<id>/` — تفاصيل + سجل تغيير الحالة (StatusHistory).
+- ✅ `/dashboard/packages/` — إدارة الباقات (Manager only) + leads_count.
+- ✅ `/dashboard/users/` — إدارة المستخدمين (Manager only) + filter بالدور.
+- ✅ Sidebar navigation + base layout بـ Tailwind RTL.
+- ✅ Decorators: `@staff_required` + `@manager_required` (لا DRF لصفحات HTML).
+- ✅ Tests: 22 (auth + perm + filter + render + role-based content).
 
-### F6 — تحديث حالة الطلب (Status Pipeline)
-- 4 حالات: 🟠 جديد · 🔵 جاري التواصل · 🟢 تم الإغلاق · ❌ ملغي.
-- HTMX inline update — اللون يتغير فوراً.
-- تتبع: من حدّث + متى.
-- **Endpoint**: `PATCH /api/leads/<id>/status/` (Supervisor / Manager).
-- **حذف**: `DELETE /api/leads/<id>/` (Manager only).
+### F6 — تحديث حالة الطلب (Status Pipeline) ✅
+- ✅ 4 حالات: 🟠 جديد · 🔵 جاري التواصل · 🟢 تم الإغلاق · ❌ ملغي.
+- ✅ HTMX inline update عبر `<select>` — البادج يتبدّل فوراً (أو من تفاصيل الطلب).
+- ✅ Audit trail: `StatusHistory` model — from_status, to_status, changed_by, note, changed_at.
+- ✅ `Lead.update_status(...)` atomic helper.
+- ✅ Endpoints DRF: `GET /api/leads/`, `PATCH /api/leads/<id>/status/`, `DELETE /api/leads/<id>/`.
+- ✅ Endpoints HTMX: `POST /dashboard/leads/<id>/status/`, `DELETE /dashboard/leads/<id>/delete/`.
+- ✅ Cancellation (`cancelled`) + Delete = Manager only — على API و HTMX (مرجع PERMISSIONS.md).
+- ✅ Tests: 21 (model 6 + DRF API 12 + HTMX 6 + history cascade + SET_NULL).
 
 ### F7 — Django Signals للإشعارات ✅
 - ✅ `@receiver(post_save, sender=Lead)` → `on_lead_created` (created=True فقط).

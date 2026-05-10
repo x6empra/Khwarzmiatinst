@@ -1,0 +1,118 @@
+{% extends "dashboard/base.html" %}
+
+{% block dash_title %}طلب #{{ lead.id }}{% endblock %}
+
+{% block dash_content %}
+  <header class="mb-6 flex items-start justify-between gap-4">
+    <div>
+      <p class="text-xs font-bold text-neutral-700">طلب رقم</p>
+      <h1 class="text-2xl font-black text-primary md:text-3xl">#{{ lead.id }} — {{ lead.name }}</h1>
+    </div>
+    {% include "dashboard/leads/_badge.html" with status=lead.status display=lead.get_status_display %}
+  </header>
+
+  <div class="grid gap-6 lg:grid-cols-[1fr_360px]">
+    {# Main info #}
+    <div class="space-y-6">
+      <section class="card">
+        <h2 class="mb-4 text-lg font-bold text-primary">بيانات العميل</h2>
+        <dl class="grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
+          <div>
+            <dt class="text-xs font-bold text-neutral-700">الاسم</dt>
+            <dd class="text-neutral-900">{{ lead.name }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-bold text-neutral-700">الجوال</dt>
+            <dd class="text-neutral-900" dir="ltr">
+              <a href="tel:{{ lead.phone }}" class="text-accent hover:underline">{{ lead.phone }}</a>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-xs font-bold text-neutral-700">البريد</dt>
+            <dd class="text-neutral-900">
+              <a href="mailto:{{ lead.email }}" class="text-accent hover:underline">{{ lead.email }}</a>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-xs font-bold text-neutral-700">الباقة المطلوبة</dt>
+            <dd class="text-neutral-900">{{ lead.package.name }} — {{ lead.package.price|floatformat:0 }} ر.س</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-bold text-neutral-700">المصدر</dt>
+            <dd class="text-neutral-900">{{ lead.get_source_display }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-bold text-neutral-700">المستثمر المرتبط</dt>
+            <dd class="text-neutral-900">
+              {% if lead.investor %}
+                <a href="mailto:{{ lead.investor.email }}" class="text-accent hover:underline">{{ lead.investor.email }}</a>
+              {% else %}—{% endif %}
+            </dd>
+          </div>
+        </dl>
+
+        {% if lead.notes %}
+          <div class="mt-4 rounded-md bg-neutral-100 p-3 text-sm">
+            <p class="mb-1 text-xs font-bold text-neutral-700">ملاحظات العميل:</p>
+            <p class="whitespace-pre-wrap">{{ lead.notes }}</p>
+          </div>
+        {% endif %}
+      </section>
+
+      {# Status change form #}
+      <section class="card">
+        <h2 class="mb-4 text-lg font-bold text-primary">تحديث الحالة</h2>
+        <form method="post" action="{% url 'dashboard:lead_status' lead.id %}"
+              class="flex flex-wrap items-end gap-3">
+          {% csrf_token %}
+          <div>
+            <label for="status-select" class="mb-1 block text-xs font-bold text-primary">الحالة الجديدة</label>
+            <select name="status" id="status-select"
+                    class="rounded-md border border-neutral-400 px-3 py-2 text-sm focus:border-accent focus:ring-2 focus:ring-accent">
+              {% for value, display in status_choices %}
+                {% if value != 'cancelled' or user.is_manager %}
+                  <option value="{{ value }}" {% if lead.status == value %}selected{% endif %}>{{ display }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn-primary text-sm">تحديث</button>
+        </form>
+      </section>
+    </div>
+
+    {# Sidebar — history #}
+    <aside>
+      <section class="card">
+        <h2 class="mb-4 text-lg font-bold text-primary">سجل الحالة</h2>
+        {% if lead.history.all %}
+          <ol class="space-y-3 text-sm">
+            {% for entry in lead.history.all %}
+              <li class="border-r-2 border-accent pr-3">
+                <p class="font-bold text-primary">
+                  {{ entry.get_from_status_display|default:"—" }} → {{ entry.get_to_status_display }}
+                </p>
+                <p class="text-xs text-neutral-700">
+                  {{ entry.changed_at|date:"Y-m-d H:i" }}
+                  {% if entry.changed_by %}· {{ entry.changed_by.email }}{% endif %}
+                </p>
+                {% if entry.note %}<p class="mt-1 text-xs text-neutral-900">{{ entry.note }}</p>{% endif %}
+              </li>
+            {% endfor %}
+          </ol>
+        {% else %}
+          <p class="text-sm text-neutral-700">لا تغييرات بعد. الحالة الافتراضية: 🟠 جديد.</p>
+        {% endif %}
+      </section>
+
+      <section class="card mt-4">
+        <h2 class="mb-2 text-sm font-bold text-primary">معلومات تقنية</h2>
+        <dl class="space-y-1 text-xs text-neutral-700">
+          <div class="flex justify-between"><dt>تم الإنشاء:</dt><dd>{{ lead.created_at|date:"Y-m-d H:i" }}</dd></div>
+          <div class="flex justify-between"><dt>آخر تحديث:</dt><dd>{{ lead.updated_at|date:"Y-m-d H:i" }}</dd></div>
+          {% if lead.ip_address %}<div class="flex justify-between"><dt>IP:</dt><dd dir="ltr">{{ lead.ip_address }}</dd></div>{% endif %}
+        </dl>
+      </section>
+    </aside>
+  </div>
+{% endblock %}
