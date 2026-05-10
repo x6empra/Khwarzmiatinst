@@ -36,7 +36,7 @@ dependencies = [
     "redis>=5.0",
 
     # i18n / Locale
-    "django-hijri-converter>=0.4",
+    "hijri-converter>=2.3",
 
     # Monitoring
     "sentry-sdk[django]>=2.13",
