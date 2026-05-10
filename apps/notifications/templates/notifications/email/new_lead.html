@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>طلب جديد — خوارزميات</title>
+</head>
+<body style="margin:0;padding:24px;background:#F4F6F7;font-family:'Cairo','Tahoma',sans-serif;color:#2C3E50;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center"
+         style="max-width:600px;width:100%;background:#FFFFFF;border-radius:12px;overflow:hidden;box-shadow:0 4px 8px rgba(27,42,78,0.10);">
+    <tr>
+      <td style="background:#1B2A4E;color:#FFFFFF;padding:24px;">
+        <h1 style="margin:0;font-size:24px;font-weight:900;">🆕 طلب جديد على خوارزميات</h1>
+        <p style="margin:8px 0 0;font-size:14px;opacity:0.85;">رقم الطلب: #{{ lead.id }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:24px;">
+        <table role="presentation" cellspacing="0" cellpadding="8" border="0" width="100%"
+               style="font-size:15px;line-height:1.6;">
+          <tr>
+            <td style="font-weight:700;color:#1B2A4E;width:30%;">👤 الاسم:</td>
+            <td>{{ lead.name }}</td>
+          </tr>
+          <tr style="background:#F4F6F7;">
+            <td style="font-weight:700;color:#1B2A4E;">📱 الجوال:</td>
+            <td><a href="tel:{{ lead.phone }}" style="color:#F39C12;text-decoration:none;">{{ lead.phone }}</a></td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;color:#1B2A4E;">📧 البريد:</td>
+            <td><a href="mailto:{{ lead.email }}" style="color:#F39C12;text-decoration:none;">{{ lead.email }}</a></td>
+          </tr>
+          <tr style="background:#F4F6F7;">
+            <td style="font-weight:700;color:#1B2A4E;">📦 الباقة:</td>
+            <td>{{ lead.package.name }}</td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;color:#1B2A4E;">🏷️ المصدر:</td>
+            <td>{{ lead.get_source_display }}</td>
+          </tr>
+          {% if lead.notes %}
+          <tr style="background:#F4F6F7;">
+            <td style="font-weight:700;color:#1B2A4E;vertical-align:top;">📝 ملاحظات:</td>
+            <td style="white-space:pre-wrap;">{{ lead.notes }}</td>
+          </tr>
+          {% endif %}
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="background:#F4F6F7;padding:16px;text-align:center;font-size:12px;color:#5D6D7E;">
+        خوارزميات · إشعار آلي · {{ lead.created_at|date:"Y-m-d H:i" }}
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

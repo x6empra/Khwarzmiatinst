@@ -12,7 +12,7 @@
 | **F4** | تسجيل/دخول المستثمر | Must | Phase 1 | ✅ |
 | **F5** | لوحة تحكم الإدارة (Admin Dashboard) | Must | Phase 1 | ⏳ |
 | **F6** | تحديث حالة الطلب (Status Pipeline) | Must | Phase 1 | ⏳ |
-| **F7** | إشعارات فورية للإدارة (Django Signals) | Must | Phase 1 | ⏳ |
+| **F7** | إشعارات فورية للإدارة (Django Signals) | Must | Phase 1 | ✅ |
 | **F8** | حماية reCAPTCHA على نموذج الحجز | Must | Phase 1 | ✅ |
 
 ## Phase 1 — Should Have (2)
@@ -98,11 +98,15 @@
 - **Endpoint**: `PATCH /api/leads/<id>/status/` (Supervisor / Manager).
 - **حذف**: `DELETE /api/leads/<id>/` (Manager only).
 
-### F7 — Django Signals للإشعارات
-- `@receiver(post_save, sender=Lead)` → `on_lead_created`.
-- Celery task: `send_telegram_to_admin(lead)`.
-- Celery task: `send_email_to_admin(lead)` (نسخة احتياطية).
-- إعادة محاولة عند الفشل (3 مرات).
+### F7 — Django Signals للإشعارات ✅
+- ✅ `@receiver(post_save, sender=Lead)` → `on_lead_created` (created=True فقط).
+- ✅ Celery task `send_telegram_to_admin(lead_id)` — أساسي، رسالة عربية بـ HTML.
+- ✅ Celery task `send_email_to_admin(lead_id)` — احتياطي، قالبا txt + html.
+- ✅ Retry: `autoretry_for=(TelegramError,)` + `retry_backoff` + `max_retries=3`.
+- ✅ Dev bypass تلقائي: بدون `TELEGRAM_BOT_TOKEN` → log + skip بدون فشل.
+- ✅ helper `apps/notifications/telegram.py` (urllib، لا dependency).
+- ✅ Signal لا يكسر إنشاء Lead لو Celery مُعطَّل (catch + log).
+- ✅ Tests: 14 (telegram 5 + tasks 6 + signals 3) — locmem outbox + EAGER mode.
 
 ### F8 — حماية reCAPTCHA ✅
 - ✅ Google reCAPTCHA v3 utility (`apps/leads/recaptcha.py`) عبر Google siteverify.

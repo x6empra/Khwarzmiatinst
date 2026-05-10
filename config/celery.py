@@ -1,4 +1,4 @@
-"""Celery app — used by apps.notifications later (F7)."""
+"""Celery app — used by apps.notifications (F7)."""
 
 import os
 
@@ -9,3 +9,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.development")
 app = Celery("khawarizmiat")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
+
+
+@app.task(bind=True)
+def debug_task(self) -> str:
+    return f"celery ok: {self.request.id}"

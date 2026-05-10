@@ -43,6 +43,7 @@ LOCAL_APPS = [
     "apps.accounts",
     "apps.packages",
     "apps.leads",
+    "apps.notifications",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -193,3 +194,9 @@ RECAPTCHA_REQUIRED_SCORE = config("RECAPTCHA_REQUIRED_SCORE", default=0.5, cast=
 # ── Telegram (F7) ───────────────────────────────────────────────────────────
 TELEGRAM_BOT_TOKEN = config("TELEGRAM_BOT_TOKEN", default="")
 TELEGRAM_ADMIN_CHAT_ID = config("TELEGRAM_ADMIN_CHAT_ID", default="")
+
+# ── Notifications (F7) ──────────────────────────────────────────────────────
+ADMIN_NOTIFICATION_EMAIL = config(
+    "ADMIN_NOTIFICATION_EMAIL",
+    default=DEFAULT_FROM_EMAIL,
+)

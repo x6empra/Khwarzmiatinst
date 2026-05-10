@@ -1,0 +1,17 @@
+طلب جديد على منصة خوارزميات
+═════════════════════════════════
+
+الاسم      : {{ lead.name }}
+الجوال     : {{ lead.phone }}
+البريد     : {{ lead.email }}
+الباقة     : {{ lead.package.name }}
+المصدر     : {{ lead.get_source_display }}
+
+ملاحظات    :
+{{ lead.notes|default:"—" }}
+
+رقم الطلب  : #{{ lead.id }}
+وقت الإنشاء: {{ lead.created_at|date:"Y-m-d H:i" }}
+
+—
+خوارزميات · إشعار آلي

@@ -19,6 +19,23 @@ def pytest_configure(config):
     # الـ class الذي يختبر rate-limit يفعّله صراحةً.
     settings.RATELIMIT_ENABLE = False
 
+    # Celery — تشغيل synchronous بدون broker خارجي (TESTING.md).
+    # نضبط الإعدادات على settings + app نفسه (config_from_object قد يكون cached).
+    settings.CELERY_TASK_ALWAYS_EAGER = True
+    settings.CELERY_TASK_EAGER_PROPAGATES = True
+    settings.CELERY_BROKER_URL = "memory://"
+    settings.CELERY_RESULT_BACKEND = "cache+memory://"
+
+    from config.celery import app as celery_app
+
+    celery_app.conf.task_always_eager = True
+    celery_app.conf.task_eager_propagates = True
+    celery_app.conf.broker_url = "memory://"
+    celery_app.conf.result_backend = "cache+memory://"
+
+    # Email في الاختبارات → locmem outbox
+    settings.EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+
 
 @pytest.fixture(autouse=True)
 def _media_root(tmp_path, settings):
@@ -36,3 +53,13 @@ def _clear_cache():
     yield
     for c in caches.all():
         c.clear()
+
+
+@pytest.fixture(autouse=True)
+def _clear_mail_outbox():
+    """يفرغ صندوق البريد بين الاختبارات."""
+    from django.core import mail
+
+    mail.outbox = []
+    yield
+    mail.outbox = []
