@@ -1,0 +1,79 @@
+{% extends "profile/base.html" %}
+
+{% block profile_title %}طلباتي{% endblock %}
+
+{% block profile_content %}
+  <header class="mb-6 flex items-end justify-between gap-3">
+    <div>
+      <h1 class="text-2xl font-black text-primary md:text-3xl">طلباتي</h1>
+      <p class="mt-1 text-sm text-neutral-700">تابع حالة كل طلب أرسلته للإدارة.</p>
+    </div>
+    <a href="{% url 'landing:home' %}#booking" class="btn-primary text-sm">+ طلب جديد</a>
+  </header>
+
+  {% if orders %}
+    <div class="space-y-4">
+      {% for lead in orders %}
+        <article class="card transition hover:shadow-lg">
+          <header class="flex flex-wrap items-start justify-between gap-3 border-b border-neutral-100 pb-3">
+            <div>
+              <h2 class="text-lg font-bold text-primary">{{ lead.package.name }}</h2>
+              <p class="text-xs text-neutral-700">طلب رقم #{{ lead.id }} · {{ lead.created_at|date:"Y-m-d H:i" }}</p>
+            </div>
+            {# يعيد استخدام F6 badge — مسار dashboard لكنه pure HTML #}
+            {% include "dashboard/leads/_badge.html" with status=lead.status display=lead.get_status_display %}
+          </header>
+
+          <dl class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3 text-sm">
+            <div>
+              <dt class="text-xs font-bold text-neutral-700">السعر</dt>
+              <dd class="text-neutral-900">{{ lead.package.price|floatformat:0 }} ر.س</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold text-neutral-700">المدة</dt>
+              <dd class="text-neutral-900">{{ lead.package.duration_months }} شهر</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold text-neutral-700">آخر تحديث</dt>
+              <dd class="text-neutral-900">{{ lead.updated_at|date:"Y-m-d H:i" }}</dd>
+            </div>
+          </dl>
+
+          {% if lead.notes %}
+            <div class="mt-3 rounded-md bg-neutral-100 p-3 text-sm">
+              <p class="mb-1 text-xs font-bold text-neutral-700">ملاحظاتك:</p>
+              <p class="whitespace-pre-wrap">{{ lead.notes }}</p>
+            </div>
+          {% endif %}
+
+          {% if lead.history.all %}
+            <details class="group mt-4">
+              <summary class="flex cursor-pointer items-center justify-between gap-2 text-sm font-bold text-primary">
+                <span>سجل الحالة ({{ lead.history.all|length }})</span>
+                <span class="transition group-open:rotate-180" aria-hidden="true">⌄</span>
+              </summary>
+              <ol class="mt-3 space-y-2 text-sm">
+                {% for entry in lead.history.all %}
+                  <li class="border-r-2 border-accent pr-3">
+                    <p class="text-neutral-900">
+                      {{ entry.get_from_status_display|default:"—" }} → {{ entry.get_to_status_display }}
+                    </p>
+                    <p class="text-xs text-neutral-700">{{ entry.changed_at|date:"Y-m-d H:i" }}</p>
+                  </li>
+                {% endfor %}
+              </ol>
+            </details>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+    <p class="mt-4 text-xs text-neutral-700">{{ orders|length }} طلب</p>
+  {% else %}
+    <div class="card text-center py-12" role="status">
+      <p class="text-5xl mb-3" aria-hidden="true">📭</p>
+      <h2 class="text-xl font-bold text-primary">لم تقدّم أي طلب بعد</h2>
+      <p class="mt-2 text-sm text-neutral-700">تصفّح الباقات واختر ما يناسب معهدك.</p>
+      <a href="{% url 'landing:home' %}#booking" class="btn-primary mt-4 inline-flex">احجز الآن</a>
+    </div>
+  {% endif %}
+{% endblock %}

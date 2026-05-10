@@ -47,6 +47,7 @@ LOCAL_APPS = [
     "apps.notifications",
     "apps.dashboard",
     "apps.landing",
+    "apps.profile.apps.ProfileConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

@@ -85,3 +85,31 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_staff_role(self) -> bool:
         """Supervisor or Manager — انتباه: غير is_staff الافتراضي."""
         return self.role in (Role.SUPERVISOR, Role.MANAGER)
+
+
+class UserProfile(models.Model):
+    """
+    ملف المستثمر — DATABASE.md §2.
+    OneToOne مع User. يُنشأ تلقائياً عبر post_save signal.
+    """
+
+    user = models.OneToOneField(
+        "accounts.User",
+        on_delete=models.CASCADE,
+        related_name="profile",
+        verbose_name=_("المستخدم"),
+    )
+    company_name = models.CharField(_("اسم المعهد/الشركة"), max_length=150, blank=True, default="")
+    city = models.CharField(_("المدينة"), max_length=50, blank=True, default="")
+    bio = models.TextField(_("نبذة"), blank=True, default="")
+    avatar = models.ImageField(_("الصورة الشخصية"), upload_to="avatars/", blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("ملف شخصي")
+        verbose_name_plural = _("الملفات الشخصية")
+
+    def __str__(self) -> str:
+        return f"Profile<{self.user.email}>"

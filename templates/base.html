@@ -52,6 +52,9 @@
             {% if user.is_authenticated and user.is_staff_role %}
               <a href="{% url 'dashboard:home' %}" class="text-sm font-bold text-white hover:text-accent">لوحة الإدارة</a>
             {% endif %}
+            {% if user.is_authenticated and user.is_investor %}
+              <a href="{% url 'investor_profile:overview' %}" class="text-sm font-bold text-white hover:text-accent">حسابي</a>
+            {% endif %}
             {% if user.is_authenticated %}
               <span class="hidden text-sm text-neutral-100 sm:inline">مرحباً، {{ user.first_name }}</span>
               <form method="post" action="{% url 'accounts:logout' %}" class="inline">

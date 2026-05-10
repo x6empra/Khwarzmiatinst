@@ -7,7 +7,14 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import User
+from .models import User, UserProfile
+
+
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    can_delete = False
+    extra = 0
+    fields = ("company_name", "city", "bio", "avatar")
 
 
 @admin.register(User)
@@ -16,6 +23,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ("email", "full_name", "role", "is_email_verified", "is_active", "date_joined")
     list_filter = ("role", "is_active", "is_email_verified", "is_staff")
     search_fields = ("email", "first_name", "last_name", "phone")
+    inlines = [UserProfileInline]
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),

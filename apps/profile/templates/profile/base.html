@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% block profile_title %}ملفي{% endblock %} — خوارزميات{% endblock %}
+
+{% block content %}
+  <div class="grid gap-6 lg:grid-cols-[260px_1fr]">
+    {# Sidebar — يستخدم نفس نمط dashboard لكن مخصّص للمستثمر #}
+    <aside class="lg:sticky lg:top-6 lg:h-fit">
+      <div class="rounded-lg bg-primary p-6 text-white shadow-md">
+        <p class="mb-1 text-xs opacity-80">حسابي</p>
+        <p class="text-sm font-bold">{{ user.full_name|default:user.email }}</p>
+        <p class="mt-1 text-xs opacity-70">{{ user.email }}</p>
+      </div>
+
+      <nav class="mt-4 rounded-lg bg-white p-2 shadow-md" aria-label="قائمة الملف الشخصي">
+        <ul class="space-y-1">
+          <li>
+            <a href="{% url 'investor_profile:overview' %}"
+               class="block rounded-md px-4 py-2 text-sm font-bold transition
+                      {% if request.resolver_match.url_name == 'overview' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
+              👤 بياناتي
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'investor_profile:orders' %}"
+               class="block rounded-md px-4 py-2 text-sm font-bold transition
+                      {% if request.resolver_match.url_name == 'orders' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
+              📋 طلباتي
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'investor_profile:password' %}"
+               class="block rounded-md px-4 py-2 text-sm font-bold transition
+                      {% if request.resolver_match.url_name == 'password' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
+              🔒 كلمة المرور
+            </a>
+          </li>
+          <li class="border-t border-neutral-100 pt-2 mt-2">
+            <a href="{% url 'packages:list' %}"
+               class="block rounded-md px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
+              📦 تصفّح الباقات
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      {% if messages %}
+        <div class="mb-4 space-y-2">
+          {% for msg in messages %}
+            <div class="rounded-md p-3 text-sm
+                        {% if msg.tags == 'success' %}bg-success/10 text-success border border-success/30
+                        {% elif msg.tags == 'error' %}bg-red-50 text-red-700 border border-red-200
+                        {% else %}bg-neutral-100 text-neutral-900{% endif %}"
+                 role="alert">
+              {{ msg }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block profile_content %}{% endblock %}
+    </main>
+  </div>
+{% endblock %}

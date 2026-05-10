@@ -281,5 +281,5 @@ jobs:
 | F6 — Status Pipeline | 21 ✅ | — | ⏳ | ✅ model + API + HTMX + audit |
 | F7 — Signals | 14 ✅ | — | ⏳ | ✅ telegram + tasks + signals |
 | F8 — reCAPTCHA | 6 ✅ | — | ⏳ | ✅ utility + integration |
-| F9 — Profile | — | — | — | ⏳ |
-| F10 — Order Tracking | — | — | — | ⏳ |
+| F9 — Profile | 14 ✅ | — | ⏳ | ✅ model + signal + form + password |
+| F10 — Order Tracking | 9 ✅ | — | ⏳ | ✅ HTML + JSON API + own-only |

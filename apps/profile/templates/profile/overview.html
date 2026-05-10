@@ -1,0 +1,61 @@
+{% extends "profile/base.html" %}
+
+{% block profile_title %}بياناتي{% endblock %}
+
+{% block profile_content %}
+  <header class="mb-6">
+    <h1 class="text-2xl font-black text-primary md:text-3xl">بياناتي الشخصية</h1>
+    <p class="mt-1 text-sm text-neutral-700">حدّث معلوماتك ليتمكن فريقنا من التواصل معك بسرعة.</p>
+  </header>
+
+  <div class="card">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      {# Avatar preview + upload #}
+      <div class="mb-6 flex items-center gap-4 border-b border-neutral-100 pb-6">
+        <div class="size-20 overflow-hidden rounded-full bg-neutral-100 ring-2 ring-accent/30">
+          {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt="صورتك" class="size-full object-cover" />
+          {% else %}
+            <div class="flex size-full items-center justify-center text-3xl text-primary" aria-hidden="true">👤</div>
+          {% endif %}
+        </div>
+        <div class="grow">
+          <label for="{{ form.avatar.id_for_label }}" class="block text-sm font-bold text-primary">الصورة الشخصية</label>
+          {{ form.avatar }}
+          {% for error in form.avatar.errors %}<p class="mt-1 text-sm text-red-600" role="alert">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+
+      {# باقي الحقول #}
+      <div class="grid gap-4 sm:grid-cols-2">
+        {% for field in form.visible_fields %}
+          {% if field.name != 'avatar' %}
+            <div class="{% if field.name == 'bio' %}sm:col-span-2{% endif %}">
+              <label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-bold text-primary">
+                {{ field.label }}{% if field.field.required %} <span class="text-red-600" aria-hidden="true">*</span>{% endif %}
+              </label>
+              {{ field }}
+              {% for error in field.errors %}<p class="mt-1 text-sm text-red-600" role="alert">{{ error }}</p>{% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if form.non_field_errors %}
+        <div class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-700" role="alert">
+          {% for err in form.non_field_errors %}<p>{{ err }}</p>{% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="mt-6 flex items-center justify-between border-t border-neutral-100 pt-4">
+        <p class="text-xs text-neutral-700">
+          آخر تحديث:
+          {% if profile.updated_at %}{{ profile.updated_at|date:"Y-m-d H:i" }}{% else %}—{% endif %}
+        </p>
+        <button type="submit" class="btn-primary">حفظ التغييرات</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

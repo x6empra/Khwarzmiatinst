@@ -19,8 +19,8 @@
 
 | ID | الميزة | MoSCoW | المرحلة | الحالة |
 |---|---|---|---|---|
-| **F9** | صفحة الملف الشخصي للمستثمر | Should | Phase 1 | ⏳ |
-| **F10** | متابعة المستثمر لحالة طلباته | Should | Phase 1 | ⏳ |
+| **F9** | صفحة الملف الشخصي للمستثمر | Should | Phase 1 | ✅ |
+| **F10** | متابعة المستثمر لحالة طلباته | Should | Phase 1 | ✅ |
 
 ## Phase 2 — Could Have
 
@@ -126,15 +126,23 @@
 - ✅ حقل token مخفي في النموذج جاهز للتعبئة من JS عند الإصدار.
 - ✅ Tests: 5 لـ recaptcha + 1 لـ rate-limit + integration tests.
 
-### F9 — صفحة الملف الشخصي
-- `/profile/` — تعديل البيانات الشخصية.
-- تغيير كلمة المرور.
-- **Permission**: IsInvestor (own only).
+### F9 — صفحة الملف الشخصي ✅
+- ✅ Model `accounts.UserProfile` (DATABASE.md §2): OneToOne User + company_name + city + bio + avatar.
+- ✅ Signal `post_save User` ينشئ Profile تلقائياً عند التسجيل.
+- ✅ `/profile/` — `ProfileForm` يجمع User (first/last/phone) + Profile (company/city/bio/avatar).
+- ✅ `/profile/password/` — Django `PasswordChangeForm` + `update_session_auth_hash` (لا خروج).
+- ✅ Sidebar layout (3 روابط) + messages framework (success/error toasts).
+- ✅ `UserProfileInline` في Django Admin.
+- ✅ Permission: `@investor_required` decorator (لا supervisor/manager).
+- ✅ Tests: 14 (model + signal + overview + password + cascades).
 
-### F10 — متابعة طلبات المستثمر
-- `/profile/orders/` — جدول طلبات المستثمر فقط.
-- Status badge ملوّن.
-- **Permission**: IsInvestor (own only).
+### F10 — متابعة طلبات المستثمر ✅
+- ✅ `/profile/orders/` — قائمة بطاقات الطلبات للمستثمر فقط (`investor=request.user`).
+- ✅ يُعيد استخدام F6 `_badge.html` للحالات الأربع.
+- ✅ سجل الحالة (StatusHistory) قابل للطيّ في `<details>`.
+- ✅ Empty state واضح + رابط "احجز الآن".
+- ✅ JSON: `GET /api/profile/orders/` — `IsInvestor` + own-only queryset.
+- ✅ Tests: 9 (HTML view + API + own-only enforcement + empty state).
 
 ---
 

@@ -21,6 +21,9 @@ urlpatterns = [
     path("api/packages/", include("apps.packages.api_urls")),
     path("api/leads/", include("apps.leads.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
+    # Profile (F9 + F10)
+    path("profile/", include("apps.profile.urls")),
+    path("api/profile/", include("apps.profile.api_urls")),
     # SEO (INFRASTRUCTURE.md §3)
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps_dict}, name="sitemap"),
     path("robots.txt", robots_txt, name="robots"),
