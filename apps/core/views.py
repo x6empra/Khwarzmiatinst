@@ -8,7 +8,17 @@ from django.views.decorators.http import require_GET
 @require_GET
 def home(request):
     """Temporary landing placeholder until F1 is built."""
-    return render(request, "core/home.html")
+    from apps.leads.forms import LeadForm
+    from apps.packages.models import Package
+
+    return render(
+        request,
+        "core/home.html",
+        {
+            "lead_form": LeadForm(),
+            "packages": Package.objects.filter(is_active=True)[:3],
+        },
+    )
 
 
 @require_GET

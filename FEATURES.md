@@ -8,12 +8,12 @@
 |---|---|---|---|---|
 | **F1** | صفحة هبوط (Landing) بكحلي + Spline 3D | Must | Phase 1 | ⏳ |
 | **F2** | عرض الباقات (Packages Display) | Must | Phase 1 | ✅ |
-| **F3** | نموذج حجز ذكي (AJAX — بدون reload) | Must | Phase 1 | ⏳ |
+| **F3** | نموذج حجز ذكي (AJAX — بدون reload) | Must | Phase 1 | ✅ |
 | **F4** | تسجيل/دخول المستثمر | Must | Phase 1 | ✅ |
 | **F5** | لوحة تحكم الإدارة (Admin Dashboard) | Must | Phase 1 | ⏳ |
 | **F6** | تحديث حالة الطلب (Status Pipeline) | Must | Phase 1 | ⏳ |
 | **F7** | إشعارات فورية للإدارة (Django Signals) | Must | Phase 1 | ⏳ |
-| **F8** | حماية reCAPTCHA على نموذج الحجز | Must | Phase 1 | ⏳ |
+| **F8** | حماية reCAPTCHA على نموذج الحجز | Must | Phase 1 | ✅ |
 
 ## Phase 1 — Should Have (2)
 
@@ -62,14 +62,15 @@
 - ✅ Admin: `PackageAdmin` (Manager only) مع image preview + slug auto.
 - ✅ Tests: 24 اختبار (model + serializer + API + HTML page).
 
-### F3 — نموذج الحجز الذكي
-- AJAX (HTMX) — بدون reload.
-- حقول: name, phone, email, package, notes.
-- Validation: phone regex سعودي/خليجي + email valid.
-- reCAPTCHA v3 مخفي.
-- بعد الإرسال: Modal أخضر "تم استلام طلبك".
-- يطلق Django Signal للإشعارات.
-- **Endpoint**: `POST /api/leads/create/` (AllowAny).
+### F3 — نموذج الحجز الذكي ✅
+- ✅ Lead model (DATABASE.md §4) كامل مع status pipeline (4 حالات) + indexes.
+- ✅ HTMX (بدون reload) — content negotiation: HTML partial أو JSON.
+- ✅ Validators: phone regex سعودي/خليجي + email + name min=3 + package active.
+- ✅ States: Default + Loading (spinner) + Error (Toast) + Success (Modal أخضر).
+- ✅ Endpoint: `POST /api/leads/create/` (AllowAny + CSRF) + `GET` لإعادة النموذج.
+- ✅ التقاط IP + User-Agent + ربط investor تلقائياً لو مسجَّل.
+- ✅ Signal stub جاهز (post_save) — handler في F7.
+- ✅ Tests: 22 (model + form + view JSON/HTMX + investor link).
 
 ### F4 — تسجيل/دخول المستثمر ✅
 - ✅ Custom User بـ email + role (investor/supervisor/manager).
@@ -103,11 +104,13 @@
 - Celery task: `send_email_to_admin(lead)` (نسخة احتياطية).
 - إعادة محاولة عند الفشل (3 مرات).
 
-### F8 — حماية reCAPTCHA
-- Google reCAPTCHA v3 (مخفي).
-- على نموذج الحجز فقط في Phase 1.
-- threshold: 0.5 (يمكن ضبطه).
-- Rate limiting 5/min على الـ endpoint.
+### F8 — حماية reCAPTCHA ✅
+- ✅ Google reCAPTCHA v3 utility (`apps/leads/recaptcha.py`) عبر Google siteverify.
+- ✅ Threshold قابل للضبط (`RECAPTCHA_REQUIRED_SCORE=0.5`).
+- ✅ Dev bypass تلقائي عند غياب الـ key (للاختبارات).
+- ✅ Rate limiting 5/min/IP عبر `django-ratelimit` (`429 Too Many Requests`).
+- ✅ حقل token مخفي في النموذج جاهز للتعبئة من JS عند الإصدار.
+- ✅ Tests: 5 لـ recaptcha + 1 لـ rate-limit + integration tests.
 
 ### F9 — صفحة الملف الشخصي
 - `/profile/` — تعديل البيانات الشخصية.

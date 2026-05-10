@@ -275,11 +275,11 @@ jobs:
 |---|---|---|---|---|
 | F1 — Landing | — | — | — | ⏳ |
 | F2 — Packages | 24 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
-| F3 — Lead Form | — | — | — | ⏳ |
+| F3 — Lead Form | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
 | F4 — Auth | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
 | F5 — Dashboard | — | — | — | ⏳ |
 | F6 — Status Pipeline | — | — | — | ⏳ |
 | F7 — Signals | — | — | — | ⏳ |
-| F8 — reCAPTCHA | — | — | — | ⏳ |
+| F8 — reCAPTCHA | 6 ✅ | — | ⏳ | ✅ utility + integration |
 | F9 — Profile | — | — | — | ⏳ |
 | F10 — Order Tracking | — | — | — | ⏳ |

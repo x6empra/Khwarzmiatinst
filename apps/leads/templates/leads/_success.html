@@ -1,0 +1,30 @@
+{# Success Modal — DESIGN_GUIDE.md §States.Success #}
+<div
+  class="rounded-lg bg-success/10 border border-success/30 p-6 text-center"
+  role="status"
+  aria-live="polite"
+>
+  <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-full bg-success text-white" aria-hidden="true">
+    <svg class="size-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  </div>
+
+  <h3 class="mb-2 text-xl font-black text-primary">تم استلام طلبك ✓</h3>
+  <p class="mb-1 text-sm text-neutral-900">
+    شكراً لك يا <strong>{{ lead.name }}</strong>. سيتواصل معك فريقنا قريباً بشأن
+    <strong>{{ lead.package.name }}</strong>.
+  </p>
+  <p class="text-xs text-neutral-700">رقم الطلب: #{{ lead.id }}</p>
+
+  <button
+    type="button"
+    class="mt-4 text-sm font-bold text-accent hover:text-accent-dark"
+    hx-get="{% url 'leads:create' %}"
+    hx-target="#booking-form-container"
+    hx-swap="innerHTML"
+    hx-trigger="click"
+  >
+    إرسال طلب آخر
+  </button>
+</div>
