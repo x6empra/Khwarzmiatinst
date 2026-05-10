@@ -1,5 +1,10 @@
 """Root pytest fixtures."""
 
+import os
+
+# يجب ضبطه قبل أي استيراد Django (Playwright + live_server)
+os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
+
 import pytest
 
 

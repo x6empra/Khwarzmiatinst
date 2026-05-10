@@ -84,10 +84,13 @@ class TestLeadCreateHTMX:
         assert b"hx-post" not in response.content
 
     def test_htmx_validation_error_returns_form(self, client, base_data):
+        # HTMX يحتاج 200 لإجراء الـ swap (الأخطاء داخل HTML)
         response = client.post(URL, {**base_data, "phone": "x"}, **self.HX)
-        assert response.status_code == 400
+        assert response.status_code == 200
         # form re-rendered with errors
         assert b"hx-post" in response.content
+        # رسالة خطأ موجودة (role=alert)
+        assert b'role="alert"' in response.content
 
     def test_htmx_get_returns_empty_form(self, client):
         response = client.get(URL, **self.HX)

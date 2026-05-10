@@ -269,17 +269,41 @@ jobs:
 
 ---
 
-## سجل الاختبارات (يُحدَّث بعد كل ميزة)
+## سجل الاختبارات النهائي — Phase 1 ✅
 
-| Feature | Unit Tests | Coverage | E2E | Status |
-|---|---|---|---|---|
-| F1 — Landing | 18 ✅ | — | ⏳ | ✅ render + SEO + sitemap + Spline fallback |
-| F2 — Packages | 24 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
-| F3 — Lead Form | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
-| F4 — Auth | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
-| F5 — Dashboard | 22 ✅ | — | ⏳ | ✅ pages + auth + filter |
-| F6 — Status Pipeline | 21 ✅ | — | ⏳ | ✅ model + API + HTMX + audit |
-| F7 — Signals | 14 ✅ | — | ⏳ | ✅ telegram + tasks + signals |
-| F8 — reCAPTCHA | 6 ✅ | — | ⏳ | ✅ utility + integration |
-| F9 — Profile | 14 ✅ | — | ⏳ | ✅ model + signal + form + password |
-| F10 — Order Tracking | 9 ✅ | — | ⏳ | ✅ HTML + JSON API + own-only |
+**الإجمالي**: 218/218 passing · **Coverage**: 97.10% (هدف ≥ 80%)
+
+| Feature | Unit | E2E | Status |
+|---|---|---|---|
+| F1 — Landing | 18 ✅ | 1 ✅ | ✅ |
+| F2 — Packages | 24 ✅ | shared | ✅ |
+| F3 — Lead Form | 35 ✅ | 2 ✅ | ✅ |
+| F4 — Auth | 35 ✅ | 1 ✅ | ✅ |
+| F5 — Dashboard | 22 ✅ | 1 ✅ | ✅ |
+| F6 — Status Pipeline | 21 ✅ | 1 ✅ | ✅ |
+| F7 — Signals | 14 ✅ | — | ✅ |
+| F8 — reCAPTCHA | 6 ✅ | — | ✅ |
+| F9 — Profile | 14 ✅ | shared | ✅ |
+| F10 — Order Tracking | 9 ✅ | 1 ✅ | ✅ |
+
+## E2E Scenarios — TESTING.md §E2E (Playwright)
+
+| # | السيناريو | المسار | النتيجة |
+|---|---|---|---|
+| 1 | زائر يفتح `/` ويرى Hero + الباقات | F1 + F2 | ✅ pass |
+| 2 | زائر يملأ نموذج الحجز ويرسل (HTMX) | F3 | ✅ pass — Modal ظاهر، Lead في DB |
+| 3 | مستثمر يسجل ويدخل | F4 | ✅ pass |
+| 4 | مستثمر مسجَّل يقدم طلب → يظهر في `/profile/orders/` | F4 + F3 + F10 | ✅ pass |
+| 5 | مشرف يرى الطلبات في `/dashboard/leads/` | F5 | ✅ pass |
+| 6 | مشرف يحدّث الحالة عبر HTMX → البادج يتبدّل | F6 | ✅ pass |
+| 7 | مستثمر يحاول `/dashboard/` → 403 | Permissions | ✅ pass |
+| 8 | إرسال هاتف غير صالح → form re-renders بأخطاء | F3 + F8 | ✅ pass |
+
+## Coverage Breakdown
+
+```
+TOTAL                              967     28    97.10%
+```
+- 967 statement أُختبر منهم 939
+- 28 statement غير مغطّى (سطور آمنة: error handlers + fallbacks)
+- جميع apps فوق 87% coverage

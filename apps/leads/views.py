@@ -53,13 +53,14 @@ def lead_create(request: HttpRequest) -> HttpResponse:
     if getattr(request, "limited", False):
         msg = "تجاوزت الحد المسموح من المحاولات. حاول بعد دقيقة."
         if _is_htmx(request):
-            return render(request, "leads/_error.html", {"message": msg}, status=429)
+            return render(request, "leads/_error.html", {"message": msg})
         return JsonResponse({"success": False, "message": msg}, status=429)
 
     form = LeadForm(request.POST)
     if not form.is_valid():
         if _is_htmx(request):
-            return render(request, "leads/_form.html", {"form": form}, status=400)
+            # HTMX يحتاج 200 لإجراء الـ swap — الأخطاء تُعرَض داخل الـ HTML
+            return render(request, "leads/_form.html", {"form": form})
         return JsonResponse(
             {"success": False, "errors": form.errors.get_json_data()},
             status=400,
@@ -71,7 +72,7 @@ def lead_create(request: HttpRequest) -> HttpResponse:
     if not passed:
         msg = "فشل التحقق من أنك لست برنامجاً آلياً. أعد المحاولة."
         if _is_htmx(request):
-            return render(request, "leads/_error.html", {"message": msg}, status=400)
+            return render(request, "leads/_error.html", {"message": msg})
         return JsonResponse(
             {"success": False, "errors": {"recaptcha": [msg]}, "_log": err},
             status=400,
