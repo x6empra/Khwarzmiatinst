@@ -10,14 +10,27 @@
           content="{% block description %}منصة رقمية تربط أصحاب المعاهد والمستثمرين بباقات خدمات تعليمية احترافية بنموذج اشتراك ذكي.{% endblock %}" />
 
     {# Open Graph (INFRASTRUCTURE.md §3) #}
+    <meta property="og:site_name" content="خوارزميات" />
     <meta property="og:title" content="{% block og_title %}خوارزميات{% endblock %}" />
     <meta property="og:description" content="{% block og_description %}منصة الاشتراكات للمعاهد والمستثمرين{% endblock %}" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}" />
     <meta property="og:locale" content="ar_SA" />
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
 
-    {# Fonts — Cairo #}
+    {# Twitter Card #}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{% block tw_title %}{{ self.og_title }}{% endblock %}" />
+    <meta name="twitter:description" content="{% block tw_description %}{{ self.og_description }}{% endblock %}" />
+
+    {# Robots #}
+    <meta name="robots" content="{% block robots %}index,follow{% endblock %}" />
+
+    {# Performance: preconnect + DNS-prefetch (INFRASTRUCTURE.md §3) #}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://unpkg.com" />
+
+    {# Fonts — Cairo #}
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&display=swap"
           rel="stylesheet" />
 
@@ -32,7 +45,7 @@
   <body class="min-h-screen flex flex-col">
     <header class="bg-primary text-white shadow-md">
       <nav class="container mx-auto flex items-center justify-between px-4 py-4">
-        <a href="{% url 'core:home' %}" class="text-2xl font-black">خوارزميات</a>
+        <a href="{% url 'landing:home' %}" class="text-2xl font-black">خوارزميات</a>
         <div class="flex items-center gap-4">
           {% block nav %}
             <a href="{% url 'packages:list' %}" class="text-sm font-bold text-white hover:text-accent">الباقات</a>
@@ -54,13 +67,46 @@
       </nav>
     </header>
 
-    <main class="flex-1 container mx-auto px-4 py-8">
+    <main class="flex-1 {% block main_class %}container mx-auto px-4 py-8{% endblock %}">
       {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-primary text-white py-6 mt-auto">
-      <div class="container mx-auto px-4 text-center text-sm">
-        © {% now "Y" %} خوارزميات — جميع الحقوق محفوظة
+    <footer class="bg-primary text-white mt-auto" role="contentinfo">
+      <div class="container mx-auto px-4 py-12">
+        <div class="grid gap-8 md:grid-cols-4">
+          <div class="md:col-span-2">
+            <a href="{% url 'landing:home' %}" class="text-2xl font-black">خوارزميات</a>
+            <p class="mt-3 max-w-md text-sm text-white/75">
+              منصة الاشتراكات الذكية للمعاهد التعليمية والمستثمرين في القطاع التعليمي.
+            </p>
+          </div>
+          <nav aria-label="روابط سريعة">
+            <h2 class="mb-3 text-sm font-bold uppercase tracking-wider text-accent">روابط</h2>
+            <ul class="space-y-2 text-sm text-white/85">
+              <li><a href="{% url 'landing:home' %}#why" class="hover:text-accent">لماذا خوارزميات</a></li>
+              <li><a href="{% url 'packages:list' %}" class="hover:text-accent">الباقات</a></li>
+              <li><a href="{% url 'landing:home' %}#faq" class="hover:text-accent">الأسئلة الشائعة</a></li>
+              <li><a href="{% url 'landing:home' %}#booking" class="hover:text-accent">احجز الآن</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="حسابي">
+            <h2 class="mb-3 text-sm font-bold uppercase tracking-wider text-accent">حسابي</h2>
+            <ul class="space-y-2 text-sm text-white/85">
+              {% if user.is_authenticated %}
+                <li><a href="{% url 'accounts:logout' %}" class="hover:text-accent">تسجيل الخروج</a></li>
+              {% else %}
+                <li><a href="{% url 'accounts:login' %}" class="hover:text-accent">تسجيل الدخول</a></li>
+                <li><a href="{% url 'accounts:register' %}" class="hover:text-accent">إنشاء حساب</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="border-t border-white/10">
+        <div class="container mx-auto flex flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-white/70 sm:flex-row">
+          <p>© {% now "Y" %} خوارزميات — جميع الحقوق محفوظة</p>
+          <p>صُنعت بـ Django · Tailwind · HTMX</p>
+        </div>
       </div>
     </footer>
 

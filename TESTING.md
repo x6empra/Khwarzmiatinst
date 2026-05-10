@@ -273,7 +273,7 @@ jobs:
 
 | Feature | Unit Tests | Coverage | E2E | Status |
 |---|---|---|---|---|
-| F1 — Landing | — | — | — | ⏳ |
+| F1 — Landing | 18 ✅ | — | ⏳ | ✅ render + SEO + sitemap + Spline fallback |
 | F2 — Packages | 24 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
 | F3 — Lead Form | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
 | F4 — Auth | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |

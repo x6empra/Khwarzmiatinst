@@ -25,7 +25,7 @@ def register(request):
         user = form.save()
         # يدخل تلقائياً بعد التسجيل (يمكن لاحقاً اشتراط تفعيل الإيميل)
         login(request, user)
-        return redirect("core:home")
+        return redirect("landing:home")
 
     return render(request, "account/register.html", {"form": form})
 
@@ -52,14 +52,14 @@ def login_view(request):
 @require_http_methods(["POST"])
 def logout_view(request):
     logout(request)
-    return redirect("core:home")
+    return redirect("landing:home")
 
 
 def _post_login_redirect(user) -> str:
     """مكان التوجيه بعد الدخول حسب الدور (يُحدَّث في المراحل اللاحقة)."""
     if getattr(user, "is_staff_role", False):
-        return "/dashboard/" if _has_dashboard() else reverse("core:home")
-    return reverse("core:home")
+        return "/dashboard/" if _has_dashboard() else reverse("landing:home")
+    return reverse("landing:home")
 
 
 def _has_dashboard() -> bool:

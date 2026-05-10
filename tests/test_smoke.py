@@ -63,12 +63,12 @@ def test_healthz_endpoint():
 
 
 @pytest.mark.django_db
-def test_home_renders():
-    """الصفحة الرئيسية المؤقتة تُعرض."""
+def test_landing_home_renders():
+    """الصفحة الرئيسية (F1) تُعرض على /."""
     client = Client()
-    response = client.get(reverse("core:home"))
+    response = client.get(reverse("landing:home"))
     assert response.status_code == 200
-    assert b"\xd8\xae\xd9\x88\xd8\xa7\xd8\xb1\xd8\xb2\xd9\x85\xd9\x8a\xd8\xa7\xd8\xaa" in response.content  # "خوارزميات"
+    assert "خوارزميات".encode() in response.content
 
 
 def test_rtl_in_base_template():

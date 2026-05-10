@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}خوارزميات — منصة الاشتراكات للمعاهد التعليمية{% endblock %}
+
+{% block description %}منصة رقمية تربط أصحاب المعاهد والمستثمرين بباقات خدمات تعليمية احترافية بنموذج اشتراك ذكي. اشترك، تابع، نمَو.{% endblock %}
+
+{% block og_title %}خوارزميات — نمَوّ معهدك يبدأ من باقة واحدة{% endblock %}
+{% block og_description %}منصة احترافية لإطلاق وإدارة المعاهد التعليمية — تجربة فاخرة، إدارة شفافة، وأمان من اليوم الأول.{% endblock %}
+
+{% block extra_head %}
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}/" />
+
+  {# Schema.org — INFRASTRUCTURE.md §3 #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "{{ request.scheme }}://{{ request.get_host }}/#org",
+        "name": "خوارزميات",
+        "alternateName": "Khawarizmiat",
+        "url": "{{ request.scheme }}://{{ request.get_host }}/",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'dist/styles.css' %}",
+        "description": "منصة الاشتراكات للمعاهد التعليمية والمستثمرين في التعليم"
+      },
+      {
+        "@type": "Service",
+        "name": "اشتراكات خوارزميات",
+        "provider": { "@id": "{{ request.scheme }}://{{ request.get_host }}/#org" },
+        "areaServed": { "@type": "Country", "name": "المملكة العربية السعودية" },
+        "serviceType": "Educational Platform Subscription"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {% for faq in faqs %}
+          {
+            "@type": "Question",
+            "name": "{{ faq.q|escapejs }}",
+            "acceptedAnswer": { "@type": "Answer", "text": "{{ faq.a|escapejs }}" }
+          }{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        ]
+      }
+    ]
+  }
+  </script>
+{% endblock %}
+
+{# نلغي container/padding base — Hero/Booking ممتدّان كاملاً #}
+{% block main_class %}flex-1{% endblock %}
+
+{% block content %}
+  {% include "landing/_hero.html" %}
+  <div class="container mx-auto px-4">
+    {% include "landing/_features.html" %}
+    {% include "landing/_packages.html" %}
+  </div>
+  {% include "landing/_faq.html" %}
+  {% include "landing/_booking.html" %}
+{% endblock %}

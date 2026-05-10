@@ -6,7 +6,7 @@
 
 | ID | الميزة | MoSCoW | المرحلة | الحالة |
 |---|---|---|---|---|
-| **F1** | صفحة هبوط (Landing) بكحلي + Spline 3D | Must | Phase 1 | ⏳ |
+| **F1** | صفحة هبوط (Landing) بكحلي + Spline 3D | Must | Phase 1 | ✅ |
 | **F2** | عرض الباقات (Packages Display) | Must | Phase 1 | ✅ |
 | **F3** | نموذج حجز ذكي (AJAX — بدون reload) | Must | Phase 1 | ✅ |
 | **F4** | تسجيل/دخول المستثمر | Must | Phase 1 | ✅ |
@@ -45,13 +45,17 @@
 
 ## تفاصيل الميزات
 
-### F1 — صفحة الهبوط (Landing)
-- Hero بكحلي + Spline 3D تفاعلي.
-- عرض الباقات داخل البطاقات.
-- نموذج الحجز مدمج في أسفل الصفحة.
-- RTL كامل + Mobile First.
-- Lazy load لـ Spline + Fallback صورة ثابتة.
-- **Permission**: AllowAny.
+### F1 — صفحة الهبوط (Landing) ✅
+- ✅ Hero بـ Gradient كحلي + Glassmorphism + 3 orbs متحركة + grid أيقونات تعليمية.
+- ✅ Spline 3D lazy-load عبر `IntersectionObserver` — يُحقن فقط عند الـ viewport + وجود `SPLINE_SCENE_URL`.
+- ✅ Fallback Glassmorphism أنيق (CSS-only) لو لا Spline أو الجوال أو reduced-motion.
+- ✅ `prefers-reduced-motion: reduce` يعطّل كل الـ animations.
+- ✅ Mobile fallback: orb-3 hidden + لا Spline.
+- ✅ Sections: Hero · Features (6) · Packages (F2) · FAQ (6 سؤال) · Booking (F3) · Footer (4-cols).
+- ✅ SEO كامل: Open Graph + Twitter Card + canonical + Schema.org (Organization + Service + FAQPage JSON-LD) + meta robots.
+- ✅ `sitemap.xml` (Django sitemaps) + `robots.txt` (يحجب admin/dashboard/api).
+- ✅ Performance: preconnect للخطوط + `dns-prefetch` لـ unpkg + Spline lazy + lazy images.
+- ✅ Tests: 18 (page sections + SEO meta + Schema.org + sitemap + robots + Spline fallback + reduced-motion).
 
 ### F2 — عرض الباقات (Packages Display) ✅
 - ✅ Model: `Package` بكل حقول DATABASE.md §3 (slug auto بدعم Unicode + indexes).

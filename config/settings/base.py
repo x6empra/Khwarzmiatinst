@@ -29,6 +29,7 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
+    "django.contrib.sitemaps",  # F1 SEO
 ]
 
 THIRD_PARTY_APPS = [
@@ -45,6 +46,7 @@ LOCAL_APPS = [
     "apps.leads",
     "apps.notifications",
     "apps.dashboard",
+    "apps.landing",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -99,8 +101,8 @@ AUTH_USER_MODEL = "accounts.User"
 
 # Auth redirects (PERMISSIONS.md)
 LOGIN_URL = "accounts:login"
-LOGIN_REDIRECT_URL = "core:home"
-LOGOUT_REDIRECT_URL = "core:home"
+LOGIN_REDIRECT_URL = "landing:home"
+LOGOUT_REDIRECT_URL = "landing:home"
 
 # ── Password Validation (PERMISSIONS.md) ────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
@@ -201,3 +203,8 @@ ADMIN_NOTIFICATION_EMAIL = config(
     "ADMIN_NOTIFICATION_EMAIL",
     default=DEFAULT_FROM_EMAIL,
 )
+
+# ── Landing (F1) ────────────────────────────────────────────────────────────
+# اضبطه على رابط مشهد Spline (مثلاً https://prod.spline.design/...)
+# لو فارغ → الـ Hero يعرض fallback Glassmorphism أنيق فقط.
+SPLINE_SCENE_URL = config("SPLINE_SCENE_URL", default="")
