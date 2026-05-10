@@ -32,6 +32,7 @@
         <a href="{% url 'core:home' %}" class="text-2xl font-black">خوارزميات</a>
         <div class="flex items-center gap-4">
           {% block nav %}
+            <a href="{% url 'packages:list' %}" class="text-sm font-bold text-white hover:text-accent">الباقات</a>
             {% if user.is_authenticated %}
               <span class="hidden text-sm text-neutral-100 sm:inline">مرحباً، {{ user.first_name }}</span>
               <form method="post" action="{% url 'accounts:logout' %}" class="inline">

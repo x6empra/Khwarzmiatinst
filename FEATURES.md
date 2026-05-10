@@ -7,7 +7,7 @@
 | ID | الميزة | MoSCoW | المرحلة | الحالة |
 |---|---|---|---|---|
 | **F1** | صفحة هبوط (Landing) بكحلي + Spline 3D | Must | Phase 1 | ⏳ |
-| **F2** | عرض الباقات (Packages Display) | Must | Phase 1 | ⏳ |
+| **F2** | عرض الباقات (Packages Display) | Must | Phase 1 | ✅ |
 | **F3** | نموذج حجز ذكي (AJAX — بدون reload) | Must | Phase 1 | ⏳ |
 | **F4** | تسجيل/دخول المستثمر | Must | Phase 1 | ✅ |
 | **F5** | لوحة تحكم الإدارة (Admin Dashboard) | Must | Phase 1 | ⏳ |
@@ -53,11 +53,14 @@
 - Lazy load لـ Spline + Fallback صورة ثابتة.
 - **Permission**: AllowAny.
 
-### F2 — عرض الباقات (Packages Display)
-- جلب الباقات من Postgres عبر `/api/packages/`.
-- بطاقات Tailwind مع لون كحلي + برتقالي للزر.
-- States: Default / Hover / Empty.
-- **Permission**: AllowAny.
+### F2 — عرض الباقات (Packages Display) ✅
+- ✅ Model: `Package` بكل حقول DATABASE.md §3 (slug auto بدعم Unicode + indexes).
+- ✅ Serializer: `PackageSerializer` يطابق عقد API.md (image_url مع build_absolute_uri).
+- ✅ Endpoints: `GET /api/packages/` + `GET /api/packages/<slug>/` (AllowAny, only `is_active=True`).
+- ✅ صفحة HTML: `/packages/` تعرض قائمة بطاقات Tailwind RTL.
+- ✅ States: Default / Hover (translate + shadow) / Empty (📭 + رابط للتواصل).
+- ✅ Admin: `PackageAdmin` (Manager only) مع image preview + slug auto.
+- ✅ Tests: 24 اختبار (model + serializer + API + HTML page).
 
 ### F3 — نموذج الحجز الذكي
 - AJAX (HTMX) — بدون reload.

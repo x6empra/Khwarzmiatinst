@@ -274,7 +274,7 @@ jobs:
 | Feature | Unit Tests | Coverage | E2E | Status |
 |---|---|---|---|---|
 | F1 — Landing | — | — | — | ⏳ |
-| F2 — Packages | — | — | — | ⏳ |
+| F2 — Packages | 24 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
 | F3 — Lead Form | — | — | — | ⏳ |
 | F4 — Auth | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
 | F5 — Dashboard | — | — | — | ⏳ |
