@@ -1,0 +1,16 @@
+{
+  "name": "khawarizmiat",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tailwind build pipeline for Khawarizmiat",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/src/input.css -o ./static/dist/styles.css --minify",
+    "watch:css": "tailwindcss -i ./static/src/input.css -o ./static/dist/styles.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.10",
+    "tailwindcss-rtl": "^0.9.0",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.13"
+  }
+}

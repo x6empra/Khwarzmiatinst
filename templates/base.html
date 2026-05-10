@@ -1,0 +1,51 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1B2A4E" />
+    <title>{% block title %}خوارزميات — منصة الاشتراكات للمعاهد{% endblock %}</title>
+    <meta name="description"
+          content="{% block description %}منصة رقمية تربط أصحاب المعاهد والمستثمرين بباقات خدمات تعليمية احترافية بنموذج اشتراك ذكي.{% endblock %}" />
+
+    {# Open Graph (INFRASTRUCTURE.md §3) #}
+    <meta property="og:title" content="{% block og_title %}خوارزميات{% endblock %}" />
+    <meta property="og:description" content="{% block og_description %}منصة الاشتراكات للمعاهد والمستثمرين{% endblock %}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ar_SA" />
+
+    {# Fonts — Cairo #}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&display=swap"
+          rel="stylesheet" />
+
+    {# Tailwind compiled output #}
+    <link rel="stylesheet" href="{% static 'dist/styles.css' %}" />
+
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <header class="bg-primary text-white shadow-md">
+      <nav class="container mx-auto flex items-center justify-between px-4 py-4">
+        <a href="{% url 'core:home' %}" class="text-2xl font-black">خوارزميات</a>
+        <div class="flex gap-4">
+          {% block nav %}{% endblock %}
+        </div>
+      </nav>
+    </header>
+
+    <main class="flex-1 container mx-auto px-4 py-8">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-primary text-white py-6 mt-auto">
+      <div class="container mx-auto px-4 text-center text-sm">
+        © {% now "Y" %} خوارزميات — جميع الحقوق محفوظة
+      </div>
+    </footer>
+
+    {% block extra_body %}{% endblock %}
+  </body>
+</html>
