@@ -276,7 +276,7 @@ jobs:
 | F1 — Landing | — | — | — | ⏳ |
 | F2 — Packages | — | — | — | ⏳ |
 | F3 — Lead Form | — | — | — | ⏳ |
-| F4 — Auth | — | — | — | ⏳ |
+| F4 — Auth | 35 ✅ | — | ⏳ | 🟡 unit done, E2E pending |
 | F5 — Dashboard | — | — | — | ⏳ |
 | F6 — Status Pipeline | — | — | — | ⏳ |
 | F7 — Signals | — | — | — | ⏳ |

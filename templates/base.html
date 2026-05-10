@@ -30,8 +30,19 @@
     <header class="bg-primary text-white shadow-md">
       <nav class="container mx-auto flex items-center justify-between px-4 py-4">
         <a href="{% url 'core:home' %}" class="text-2xl font-black">خوارزميات</a>
-        <div class="flex gap-4">
-          {% block nav %}{% endblock %}
+        <div class="flex items-center gap-4">
+          {% block nav %}
+            {% if user.is_authenticated %}
+              <span class="hidden text-sm text-neutral-100 sm:inline">مرحباً، {{ user.first_name }}</span>
+              <form method="post" action="{% url 'accounts:logout' %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="text-sm font-bold text-white hover:text-accent">خروج</button>
+              </form>
+            {% else %}
+              <a href="{% url 'accounts:login' %}" class="text-sm font-bold text-white hover:text-accent">دخول</a>
+              <a href="{% url 'accounts:register' %}" class="rounded-md bg-accent px-4 py-2 text-sm font-bold text-white hover:bg-accent-dark">تسجيل</a>
+            {% endif %}
+          {% endblock %}
         </div>
       </nav>
     </header>

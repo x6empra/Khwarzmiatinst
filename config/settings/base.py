@@ -40,6 +40,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "apps.core",
+    "apps.accounts",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -90,8 +91,12 @@ DATABASES = {
     ),
 }
 
-# AUTH_USER_MODEL سيُفعَّل في المرحلة 1 (apps.accounts.User)
-# AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "accounts.User"
+
+# Auth redirects (PERMISSIONS.md)
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "core:home"
+LOGOUT_REDIRECT_URL = "core:home"
 
 # ── Password Validation (PERMISSIONS.md) ────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [

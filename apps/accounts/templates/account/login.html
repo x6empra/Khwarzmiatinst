@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}تسجيل الدخول — خوارزميات{% endblock %}
+
+{% block content %}
+  <section class="mx-auto max-w-md py-12">
+    <div class="card">
+      <header class="mb-6 text-center">
+        <h1 class="text-2xl font-black text-primary">تسجيل الدخول</h1>
+        <p class="mt-2 text-sm text-neutral-700">ادخل لبيانات حسابك للمتابعة.</p>
+      </header>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% include "account/_form.html" %}
+
+        <button type="submit" class="btn-primary w-full">دخول</button>
+      </form>
+
+      <p class="mt-6 text-center text-sm text-neutral-700">
+        ليس لديك حساب؟
+        <a href="{% url 'accounts:register' %}" class="font-bold text-accent hover:text-accent-dark">سجّل الآن</a>
+      </p>
+    </div>
+  </section>
+{% endblock %}

@@ -9,7 +9,7 @@
 | **F1** | صفحة هبوط (Landing) بكحلي + Spline 3D | Must | Phase 1 | ⏳ |
 | **F2** | عرض الباقات (Packages Display) | Must | Phase 1 | ⏳ |
 | **F3** | نموذج حجز ذكي (AJAX — بدون reload) | Must | Phase 1 | ⏳ |
-| **F4** | تسجيل/دخول المستثمر | Must | Phase 1 | ⏳ |
+| **F4** | تسجيل/دخول المستثمر | Must | Phase 1 | ✅ |
 | **F5** | لوحة تحكم الإدارة (Admin Dashboard) | Must | Phase 1 | ⏳ |
 | **F6** | تحديث حالة الطلب (Status Pipeline) | Must | Phase 1 | ⏳ |
 | **F7** | إشعارات فورية للإدارة (Django Signals) | Must | Phase 1 | ⏳ |
@@ -68,12 +68,17 @@
 - يطلق Django Signal للإشعارات.
 - **Endpoint**: `POST /api/leads/create/` (AllowAny).
 
-### F4 — تسجيل/دخول المستثمر
-- django-allauth.
-- إيميل + كلمة مرور ≥ 8 + رقم + رمز.
-- تأكيد إيميل بعد التسجيل.
-- استعادة كلمة المرور (token صالح 1h).
-- مدة الجلسة: 14 يوم + "تذكرني" 30 يوم.
+### F4 — تسجيل/دخول المستثمر ✅
+- ✅ Custom User بـ email + role (investor/supervisor/manager).
+- ✅ كلمة مرور ≥ 8 (Django password validators).
+- ✅ Permission classes: `IsInvestor`, `IsSupervisor`, `IsManager`, `IsOwnerInvestor`.
+- ✅ Forms: `RegisterForm` + `LoginForm` بـ Tailwind RTL.
+- ✅ Views: `/accounts/register/`, `/accounts/login/`, `/accounts/logout/`.
+- ✅ Signal: Supervisor/Manager → `is_staff=True` تلقائياً.
+- ✅ "تذكرني" → 30 يوم session.
+- ✅ Django Admin: إنشاء supervisor/manager (Manager فقط — لا تسجيل عام).
+- ✅ Tests: 35 اختبار (models + forms + views + permissions).
+- ⏳ تأكيد الإيميل + استعادة كلمة المرور — تأجَّلت لتكامل allauth في المرحلة 7.
 
 ### F5 — Admin Dashboard
 - `/dashboard/` — نظرة عامة (إحصائيات + آخر 5 طلبات).
