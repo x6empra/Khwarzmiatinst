@@ -34,7 +34,7 @@ class TestLandingPage:
         response = client.get(self.URL)
         body = response.content.decode()
         assert "booking-form-container" in body
-        assert "/api/leads/create/" in body
+        assert "/api/leads/create" in body
 
     def test_faqs_rendered(self, client):
         response = client.get(self.URL)

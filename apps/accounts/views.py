@@ -58,7 +58,7 @@ def logout_view(request):
 def _post_login_redirect(user) -> str:
     """مكان التوجيه بعد الدخول حسب الدور (يُحدَّث في المراحل اللاحقة)."""
     if getattr(user, "is_staff_role", False):
-        return "/dashboard/" if _has_dashboard() else reverse("landing:home")
+        return "/dashboard" if _has_dashboard() else reverse("landing:home")
     return reverse("landing:home")
 
 
