@@ -45,6 +45,11 @@ DATABASES = {
     ),
 }
 
+MYSQL_UNIX_SOCKET = config("MYSQL_UNIX_SOCKET", default="")
+if MYSQL_UNIX_SOCKET and DATABASES["default"]["ENGINE"] == "django.db.backends.mysql":
+    DATABASES["default"].setdefault("OPTIONS", {})
+    DATABASES["default"]["OPTIONS"]["unix_socket"] = MYSQL_UNIX_SOCKET
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
