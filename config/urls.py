@@ -11,15 +11,19 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
+from apps.accounts.views import login_view
+from apps.dashboard.views import dashboard_home
 from apps.landing.sitemaps import sitemaps_dict
 from apps.landing.views import robots_txt
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts", login_view, name="accounts_login_short"),
     path("accounts/", include("apps.accounts.urls")),
     path("packages/", include("apps.packages.urls")),
     path("api/packages/", include("apps.packages.api_urls")),
     path("api/leads/", include("apps.leads.urls")),
+    path("dashboard", dashboard_home, name="dashboard_home_short"),
     path("dashboard/", include("apps.dashboard.urls")),
     # Profile (F9 + F10)
     path("profile/", include("apps.profile.urls")),
