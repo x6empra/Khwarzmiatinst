@@ -19,3 +19,4 @@ redis>=5.0
 hijri-converter>=2.3
 sentry-sdk[django]>=2.13
 gunicorn>=22.0
+PyMySQL>=1.1

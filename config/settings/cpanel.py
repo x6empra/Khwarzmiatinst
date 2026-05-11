@@ -3,6 +3,14 @@
 from .base import *  # noqa: F403
 from .base import BASE_DIR, Csv, config, dj_database_url
 
+try:
+    import pymysql
+except ImportError:
+    pymysql = None
+
+if pymysql is not None:
+    pymysql.install_as_MySQLdb()
+
 DEBUG = False
 
 ALLOWED_HOSTS = config(
