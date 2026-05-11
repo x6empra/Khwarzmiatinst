@@ -46,7 +46,7 @@ def application(
     script_name = str(environ.get("SCRIPT_NAME") or "")
     path_info = str(environ.get("PATH_INFO") or "")
     if script_name and script_name != "/":
-        suffix = path_info or "/"
+        suffix = path_info
         environ["PATH_INFO"] = f"{script_name}{suffix}"
         environ["SCRIPT_NAME"] = ""
     return django_application(environ, start_response)
