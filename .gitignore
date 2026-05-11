@@ -22,7 +22,8 @@ db.sqlite3
 db.sqlite3-journal
 /media/
 /staticfiles/
-/static/dist/
+/static/dist/*
+!/static/dist/styles.css
 
 # Tests / Coverage
 .coverage
@@ -61,5 +62,5 @@ secrets.json
 
 # Build
 build/
-dist/
+/dist/
 *.tar.gz
