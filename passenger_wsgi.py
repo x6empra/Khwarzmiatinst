@@ -18,7 +18,7 @@ def _restart_with_venv_python() -> None:
     env.pop("PYTHONHOME", None)
     env["VIRTUAL_ENV"] = str(BASE_DIR / "venv")
     env["PATH"] = f"{VENV_PYTHON.parent}:{env.get('PATH', '')}"
-    os.execve(str(VENV_PYTHON), [str(VENV_PYTHON), __file__], env)
+    os.execve(str(VENV_PYTHON), [str(VENV_PYTHON), *sys.argv], env)
 
 
 _restart_with_venv_python()
