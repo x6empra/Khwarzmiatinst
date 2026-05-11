@@ -13,9 +13,7 @@ from playwright.sync_api import Page, expect
 pytestmark = pytest.mark.django_db(transaction=True)
 
 
-def test_investor_can_register_and_login(
-    page: Page, live_server_url: str
-) -> None:
+def test_investor_can_register_and_login(page: Page, live_server_url: str) -> None:
     """السيناريو 3: تسجيل + دخول."""
     page.goto(live_server_url + "/accounts/register/")
 

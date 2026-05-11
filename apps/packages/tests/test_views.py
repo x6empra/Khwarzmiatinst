@@ -6,7 +6,6 @@ from django.urls import reverse
 from apps.accounts.factories import InvestorFactory, ManagerFactory, SupervisorFactory
 from apps.packages.factories import PackageFactory
 
-
 # ── API: GET /api/packages/ ─────────────────────────────────────────────────
 
 
@@ -41,7 +40,16 @@ class TestPackageListAPI:
         body = response.json()
         assert {"count", "next", "previous", "results"} <= set(body.keys())
         first = body["results"][0]
-        for key in ("id", "name", "slug", "price", "duration_months", "features", "image_url", "is_featured"):
+        for key in (
+            "id",
+            "name",
+            "slug",
+            "price",
+            "duration_months",
+            "features",
+            "image_url",
+            "is_featured",
+        ):
             assert key in first
 
 
@@ -91,6 +99,14 @@ class TestPackagesPage:
         body = response.content.decode()
         assert "Visible" in body
         assert "Hidden" not in body
+
+    def test_package_image_rendered_from_model(self, client):
+        pkg = PackageFactory(name="الباقة الذهبية", image="packages/package-gold.png")
+        response = client.get(self.URL)
+        body = response.content.decode()
+        assert f'id="package-{pkg.slug}"' in body
+        assert 'src="/media/packages/package-gold.png"' in body
+        assert 'alt="صورة الباقة الذهبية"' in body
 
     def test_investor_supervisor_manager_can_view(self, client):
         """AllowAny — كل الأدوار تشاهد الباقات."""

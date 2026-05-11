@@ -32,7 +32,9 @@ class TestOverview:
         client.force_login(InvestorFactory(email="me@x.com"))
         response = client.get(self.URL)
         assert response.status_code == 200
-        assert b"\xd8\xa8\xd9\x8a\xd8\xa7\xd9\x86\xd8\xa7\xd8\xaa\xd9\x8a" in response.content  # "بياناتي"
+        assert (
+            b"\xd8\xa8\xd9\x8a\xd8\xa7\xd9\x86\xd8\xa7\xd8\xaa\xd9\x8a" in response.content
+        )  # "بياناتي"
 
     def test_post_updates_profile(self, client):
         user = InvestorFactory(email="me@x.com", first_name="قديم")

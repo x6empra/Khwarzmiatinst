@@ -69,8 +69,8 @@ class Lead(models.Model):
     class Meta:
         verbose_name = _("طلب")
         verbose_name_plural = _("الطلبات")
-        ordering = ["-created_at"]
-        indexes = [
+        ordering = ["-created_at"]  # noqa: RUF012 - Django Meta expects list-like options.
+        indexes = [  # noqa: RUF012 - Django Meta expects list-like options.
             models.Index(fields=["email"]),
             models.Index(fields=["phone"]),
             models.Index(fields=["status", "-created_at"]),
@@ -115,7 +115,7 @@ class StatusHistory(models.Model):
         related_name="history",
         verbose_name=_("الطلب"),
     )
-    from_status = models.CharField(
+    from_status = models.CharField(  # noqa: DJ001 - DATABASE.md defines nullable previous state.
         _("الحالة السابقة"),
         max_length=20,
         choices=LeadStatus.choices,
@@ -141,10 +141,8 @@ class StatusHistory(models.Model):
     class Meta:
         verbose_name = _("سجل تغيير حالة")
         verbose_name_plural = _("سجلات تغيير الحالة")
-        ordering = ["-changed_at"]
-        indexes = [
-            models.Index(fields=["lead", "-changed_at"]),
-        ]
+        ordering = ["-changed_at"]  # noqa: RUF012 - Django Meta expects list-like options.
+        indexes = [models.Index(fields=["lead", "-changed_at"])]  # noqa: RUF012
 
     def __str__(self) -> str:
         return f"#{self.lead_id}: {self.from_status} → {self.to_status}"

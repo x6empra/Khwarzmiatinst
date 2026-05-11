@@ -1,0 +1,166 @@
+{% extends "dashboard/base.html" %}
+
+{% block dash_title %}{% if package %}تعديل باقة{% else %}إضافة باقة{% endif %}{% endblock %}
+
+{% block dash_content %}
+  <header class="mb-6">
+    <a href="{% url 'dashboard:packages' %}" class="mb-2 inline-flex items-center text-sm font-bold text-accent hover:text-accent-dark">
+      ← العودة للباقات
+    </a>
+    <h1 class="text-2xl font-black text-primary md:text-3xl">
+      {% if package %}تعديل باقة «{{ package.name }}»{% else %}إضافة باقة جديدة{% endif %}
+    </h1>
+  </header>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+
+    <div class="grid gap-6 lg:grid-cols-3">
+      {# --- العمود الأيمن: الحقول الأساسية --- #}
+      <div class="lg:col-span-2 space-y-4">
+        <section class="card">
+          <h2 class="mb-4 text-lg font-bold text-primary">المعلومات الأساسية</h2>
+
+          {% for field in form %}
+            {% if field.name not in 'is_featured is_active image' %}
+              <div class="mb-4">
+                <label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-bold text-primary">
+                  {{ field.label }}{% if field.field.required %} <span class="text-red-600" aria-hidden="true">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                  <p class="mt-1 text-xs text-neutral-700">{{ field.help_text }}</p>
+                {% endif %}
+                {% for error in field.errors %}
+                  <p class="mt-1 text-sm text-red-600" role="alert">{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </section>
+
+        {# --- المميزات: قائمة قابلة للتحرير --- #}
+        <section class="card">
+          <header class="mb-4 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-primary">مميزات الباقة</h2>
+              <p class="text-xs text-neutral-700">أضف ميزة لكل سطر — يمكنك السحب لإعادة الترتيب لاحقاً.</p>
+            </div>
+            <button type="button" id="add-feature-btn"
+                    class="rounded-md bg-accent px-4 py-2 text-sm font-bold text-white hover:bg-accent-dark focus-visible:ring-2 focus-visible:ring-accent">
+              + إضافة ميزة
+            </button>
+          </header>
+
+          <div id="features-list" class="space-y-2" role="list" aria-label="مميزات الباقة">
+            {% for feature in features_list %}
+              <div class="feature-row flex items-center gap-2" role="listitem">
+                <span class="text-neutral-700 select-none" aria-hidden="true">✓</span>
+                <input type="text" name="features" value="{{ feature }}"
+                       placeholder="مثلاً: دعم فني 24/7"
+                       class="grow rounded-md border border-neutral-400 px-3 py-2 text-sm focus:border-accent focus:ring-2 focus:ring-accent" />
+                <button type="button" class="remove-feature-btn rounded-md p-2 text-red-600 hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-500"
+                        aria-label="حذف الميزة">
+                  ×
+                </button>
+              </div>
+            {% empty %}
+              <p id="features-empty" class="rounded-md bg-neutral-100 p-4 text-center text-sm text-neutral-700">
+                لا توجد مميزات بعد. اضغط «+ إضافة ميزة» لتبدأ.
+              </p>
+            {% endfor %}
+          </div>
+        </section>
+      </div>
+
+      {# --- العمود الأيسر: النشر + الصورة --- #}
+      <aside class="space-y-4">
+        <section class="card">
+          <h2 class="mb-4 text-lg font-bold text-primary">حالة النشر</h2>
+          <div class="space-y-3 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer">
+              {{ form.is_active }}
+              <span class="font-bold text-primary">{{ form.is_active.label }}</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              {{ form.is_featured }}
+              <span class="font-bold text-primary">{{ form.is_featured.label }}</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2 class="mb-4 text-lg font-bold text-primary">صورة الباقة</h2>
+          {% if package.image %}
+            <img src="{{ package.image.url }}" alt="{{ package.name }}" class="mb-3 h-32 w-full rounded-md object-cover" />
+          {% endif %}
+          {{ form.image }}
+          {% for error in form.image.errors %}
+            <p class="mt-1 text-sm text-red-600" role="alert">{{ error }}</p>
+          {% endfor %}
+        </section>
+
+        <button type="submit" class="btn-primary w-full">
+          {% if package %}حفظ التعديلات{% else %}إنشاء الباقة{% endif %}
+        </button>
+        <a href="{% url 'dashboard:packages' %}" class="block text-center text-sm text-neutral-700 hover:text-primary">إلغاء</a>
+      </aside>
+    </div>
+  </form>
+
+  {# --- Template للصف الجديد (محذوف من DOM، يُنسَخ بـ JS) --- #}
+  <template id="feature-row-template">
+    <div class="feature-row flex items-center gap-2" role="listitem">
+      <span class="text-neutral-700 select-none" aria-hidden="true">✓</span>
+      <input type="text" name="features" value=""
+             placeholder="مثلاً: دعم فني 24/7"
+             class="grow rounded-md border border-neutral-400 px-3 py-2 text-sm focus:border-accent focus:ring-2 focus:ring-accent" />
+      <button type="button" class="remove-feature-btn rounded-md p-2 text-red-600 hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-500"
+              aria-label="حذف الميزة">×</button>
+    </div>
+  </template>
+
+  <script>
+    (function () {
+      const list = document.getElementById('features-list');
+      const addBtn = document.getElementById('add-feature-btn');
+      const tpl = document.getElementById('feature-row-template');
+      const emptyMsg = document.getElementById('features-empty');
+
+      function focusLast() {
+        const inputs = list.querySelectorAll('input[name="features"]');
+        if (inputs.length > 0) inputs[inputs.length - 1].focus();
+      }
+
+      function attachRemove(row) {
+        const btn = row.querySelector('.remove-feature-btn');
+        btn.addEventListener('click', () => {
+          row.remove();
+          if (!list.querySelector('.feature-row') && emptyMsg) {
+            emptyMsg.style.display = '';
+            list.appendChild(emptyMsg);
+          }
+        });
+      }
+
+      addBtn.addEventListener('click', () => {
+        if (emptyMsg) emptyMsg.style.display = 'none';
+        const clone = tpl.content.firstElementChild.cloneNode(true);
+        attachRemove(clone);
+        list.appendChild(clone);
+        focusLast();
+      });
+
+      // ارفع listener على الصفوف الموجودة من السيرفر
+      list.querySelectorAll('.feature-row').forEach(attachRemove);
+
+      // Enter داخل input يضيف صفاً جديداً (UX سريع)
+      list.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.target.matches('input[name="features"]')) {
+          e.preventDefault();
+          addBtn.click();
+        }
+      });
+    })();
+  </script>
+{% endblock %}

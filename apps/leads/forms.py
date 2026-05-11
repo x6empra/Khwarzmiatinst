@@ -1,5 +1,7 @@
 """LeadForm — server-side validation (PERMISSIONS.md, FEATURES.md F3)."""
 
+from typing import ClassVar
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -19,17 +21,23 @@ class LeadForm(forms.ModelForm):
 
     class Meta:
         model = Lead
-        fields = ["name", "phone", "email", "package", "notes"]
-        widgets = {
+        fields = ("name", "phone", "email", "package", "notes")
+        widgets: ClassVar[dict[str, forms.Widget]] = {
             "name": forms.TextInput(attrs={"class": _BASE_INPUT, "placeholder": _("الاسم الكامل")}),
             "phone": forms.TextInput(attrs={"class": _BASE_INPUT, "placeholder": "05XXXXXXXX"}),
-            "email": forms.EmailInput(attrs={"class": _BASE_INPUT, "placeholder": "you@example.com"}),
+            "email": forms.EmailInput(
+                attrs={"class": _BASE_INPUT, "placeholder": "you@example.com"}
+            ),
             "package": forms.Select(attrs={"class": _BASE_INPUT}),
             "notes": forms.Textarea(
-                attrs={"class": _BASE_INPUT, "rows": 3, "placeholder": _("أي تفاصيل إضافية (اختياري)")}
+                attrs={
+                    "class": _BASE_INPUT,
+                    "rows": 3,
+                    "placeholder": _("أي تفاصيل إضافية (اختياري)"),
+                }
             ),
         }
-        labels = {
+        labels: ClassVar[dict[str, object]] = {
             "name": _("الاسم"),
             "phone": _("رقم الجوال"),
             "email": _("البريد الإلكتروني"),

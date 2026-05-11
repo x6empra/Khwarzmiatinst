@@ -1,5 +1,6 @@
 """View tests — TESTING.md §Unit + API.md §Leads."""
 
+from typing import ClassVar
 from unittest.mock import patch
 
 import pytest
@@ -48,6 +49,7 @@ class TestLeadCreateJSON:
 
     def test_inactive_package_400(self, client, base_data):
         from apps.packages.factories import PackageFactory
+
         inactive = PackageFactory(is_active=False)
         response = client.post(URL, {**base_data, "package": inactive.id})
         assert response.status_code == 400
@@ -74,7 +76,7 @@ class TestLeadCreateJSON:
 
 @pytest.mark.django_db
 class TestLeadCreateHTMX:
-    HX = {"HTTP_HX_REQUEST": "true"}
+    HX: ClassVar[dict[str, str]] = {"HTTP_HX_REQUEST": "true"}
 
     def test_htmx_success_returns_modal_html(self, client, base_data):
         response = client.post(URL, base_data, **self.HX)

@@ -1,5 +1,7 @@
 """Profile forms — F9 (PERMISSIONS.md: server-side validation)."""
 
+from typing import ClassVar
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
@@ -37,13 +39,13 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ["company_name", "city", "bio", "avatar"]
-        widgets = {
+        fields = ("company_name", "city", "bio", "avatar")
+        widgets: ClassVar[dict[str, forms.Widget]] = {
             "company_name": forms.TextInput(attrs={"class": _BASE_INPUT}),
             "city": forms.TextInput(attrs={"class": _BASE_INPUT}),
             "bio": forms.Textarea(attrs={"class": _BASE_INPUT, "rows": 4}),
         }
-        labels = {
+        labels: ClassVar[dict[str, object]] = {
             "company_name": _("اسم المعهد/الشركة"),
             "city": _("المدينة"),
             "bio": _("نبذة"),

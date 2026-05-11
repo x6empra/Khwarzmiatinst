@@ -13,7 +13,8 @@ from __future__ import annotations
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import render
 from django_ratelimit.decorators import ratelimit
-from rest_framework import filters, generics, status as drf_status
+from rest_framework import filters, generics
+from rest_framework import status as drf_status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -101,11 +102,11 @@ class LeadListAPIView(generics.ListAPIView):
     """GET /api/leads/ — IsSupervisor (API.md §Leads)."""
 
     serializer_class = LeadListSerializer
-    permission_classes = [IsAuthenticated, IsSupervisor]
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ["name", "phone", "email", "notes"]
-    ordering_fields = ["created_at", "status", "name"]
-    ordering = ["-created_at"]
+    permission_classes = (IsAuthenticated, IsSupervisor)
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    search_fields = ("name", "phone", "email", "notes")
+    ordering_fields = ("created_at", "status", "name")
+    ordering = ("-created_at",)
 
     def get_queryset(self):
         qs = Lead.objects.select_related("package", "investor").all()
@@ -123,7 +124,7 @@ class LeadStatusUpdateAPIView(APIView):
     إلغاء (cancelled) → IsManager فقط.
     """
 
-    permission_classes = [IsAuthenticated, IsSupervisor]
+    permission_classes = (IsAuthenticated, IsSupervisor)
 
     def patch(self, request, pk: int):
         try:
@@ -154,5 +155,5 @@ class LeadDeleteAPIView(generics.DestroyAPIView):
     """DELETE /api/leads/<id>/ — IsManager only."""
 
     queryset = Lead.objects.all()
-    permission_classes = [IsAuthenticated, IsManager]
+    permission_classes = (IsAuthenticated, IsManager)
     lookup_field = "pk"

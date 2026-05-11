@@ -34,7 +34,9 @@ class TestLeadForm:
         assert not form.is_valid()
         assert "phone" in form.errors
 
-    @pytest.mark.parametrize("phone", ["0501234567", "00966501234567", "+966501234567", "966501234567"])
+    @pytest.mark.parametrize(
+        "phone", ["0501234567", "00966501234567", "+966501234567", "966501234567"]
+    )
     def test_valid_phone_formats(self, base_data, phone):
         form = LeadForm({**base_data, "phone": phone})
         assert form.is_valid(), form.errors

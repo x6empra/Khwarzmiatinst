@@ -46,6 +46,8 @@ class TestTelegram:
         settings.TELEGRAM_ADMIN_CHAT_ID = "999"
         from urllib.error import URLError
 
-        with patch("apps.notifications.telegram.urlopen", side_effect=URLError("dns")):
-            with pytest.raises(TelegramError):
-                send_message("hi")
+        with (
+            patch("apps.notifications.telegram.urlopen", side_effect=URLError("dns")),
+            pytest.raises(TelegramError),
+        ):
+            send_message("hi")

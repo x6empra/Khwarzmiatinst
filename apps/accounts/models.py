@@ -5,6 +5,8 @@ Custom User model — see DATABASE.md §1.
 Email is the unique identifier (no username).
 """
 
+from typing import ClassVar
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
@@ -49,12 +51,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    REQUIRED_FIELDS: ClassVar[list[str]] = ["first_name", "last_name"]
 
     class Meta:
         verbose_name = _("مستخدم")
         verbose_name_plural = _("المستخدمون")
-        ordering = ["-date_joined"]
+        ordering = ["-date_joined"]  # noqa: RUF012 - Django Meta expects list-like options.
 
     def __str__(self) -> str:
         return f"{self.full_name} ({self.email})"

@@ -1,16 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}خوارزميات — منصة الاشتراكات للمعاهد التعليمية{% endblock %}
-
-{% block description %}منصة رقمية تربط أصحاب المعاهد والمستثمرين بباقات خدمات تعليمية احترافية بنموذج اشتراك ذكي. اشترك، تابع، نمَو.{% endblock %}
-
+{% block description %}
+  منصة رقمية تربط أصحاب المعاهد والمستثمرين بباقات خدمات تعليمية احترافية بنموذج اشتراك ذكي. اشترك، تابع، نمَو.
+{% endblock %}
 {% block og_title %}خوارزميات — نمَوّ معهدك يبدأ من باقة واحدة{% endblock %}
-{% block og_description %}منصة احترافية لإطلاق وإدارة المعاهد التعليمية — تجربة فاخرة، إدارة شفافة، وأمان من اليوم الأول.{% endblock %}
-
+{% block og_description %}
+  منصة احترافية لإطلاق وإدارة المعاهد التعليمية — تجربة فاخرة، إدارة شفافة، وأمان من اليوم الأول.
+{% endblock %}
 {% block extra_head %}
   <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}/" />
-
   {# Schema.org — INFRASTRUCTURE.md §3 #}
   <script type="application/ld+json">
   {
@@ -48,16 +47,16 @@
   }
   </script>
 {% endblock %}
-
 {# نلغي container/padding base — Hero/Booking ممتدّان كاملاً #}
 {% block main_class %}flex-1{% endblock %}
-
 {% block content %}
   {% include "landing/_hero.html" %}
-  <div class="container mx-auto px-4">
-    {% include "landing/_features.html" %}
-    {% include "landing/_packages.html" %}
+  <div class="surface-band">
+    <div class="container mx-auto px-4">{% include "landing/_features.html" %}</div>
   </div>
-  {% include "landing/_faq.html" %}
+  <div class="surface-band-accent">
+    <div class="container mx-auto px-4">{% include "landing/_packages.html" %}</div>
+  </div>
+  <div class="surface-band-success">{% include "landing/_faq.html" %}</div>
   {% include "landing/_booking.html" %}
 {% endblock %}

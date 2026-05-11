@@ -7,17 +7,19 @@ HTMX endpoints (تحديث الحالة) ترجّع HTML partial.
 
 from __future__ import annotations
 
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET, require_http_methods
 
 from apps.leads.models import Lead, LeadStatus
 from apps.packages.models import Package
 
 from .decorators import manager_required, staff_required
+from .forms import PackageEditForm
 
 User = get_user_model()
 
@@ -57,6 +59,7 @@ def leads_list(request: HttpRequest) -> HttpResponse:
     search = request.GET.get("q", "").strip()
     if search:
         from django.db.models import Q
+
         qs = qs.filter(
             Q(name__icontains=search) | Q(phone__icontains=search) | Q(email__icontains=search)
         )
@@ -126,6 +129,59 @@ def lead_delete(request: HttpRequest, pk: int) -> HttpResponse:
 def packages_list(request: HttpRequest) -> HttpResponse:
     packages = Package.objects.annotate(leads_count=Count("leads")).order_by("display_order")
     return render(request, "dashboard/packages/list.html", {"packages": packages})
+
+
+@require_http_methods(["GET", "POST"])
+@manager_required
+def package_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    """تحرير باقة من Dashboard — Manager only.
+    features تأتي عبر request.POST.getlist('features') (مدخلات متعددة بنفس الاسم).
+    """
+    package = get_object_or_404(Package, pk=pk)
+
+    if request.method == "POST":
+        form = PackageEditForm(
+            request.POST,
+            request.FILES,
+            instance=package,
+            features_list=request.POST.getlist("features"),
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"✓ تم حفظ التعديلات على باقة «{package.name}».")
+            return redirect("dashboard:packages")
+    else:
+        form = PackageEditForm(instance=package)
+
+    return render(
+        request,
+        "dashboard/packages/edit.html",
+        {"form": form, "package": package, "features_list": form.features_list},
+    )
+
+
+@require_http_methods(["GET", "POST"])
+@manager_required
+def package_create(request: HttpRequest) -> HttpResponse:
+    """إضافة باقة جديدة من Dashboard — Manager only."""
+    if request.method == "POST":
+        form = PackageEditForm(
+            request.POST,
+            request.FILES,
+            features_list=request.POST.getlist("features"),
+        )
+        if form.is_valid():
+            pkg = form.save()
+            messages.success(request, f"✓ تم إنشاء باقة «{pkg.name}» بنجاح.")
+            return redirect("dashboard:packages")
+    else:
+        form = PackageEditForm()
+
+    return render(
+        request,
+        "dashboard/packages/edit.html",
+        {"form": form, "package": None, "features_list": form.features_list},
+    )
 
 
 # ── /dashboard/users/ — Manager only ────────────────────────────────────────

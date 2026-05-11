@@ -29,5 +29,5 @@ def on_lead_created(sender, instance: Lead, created: bool, **kwargs) -> None:
     try:
         send_telegram_to_admin.delay(instance.id)
         send_email_to_admin.delay(instance.id)
-    except Exception:  # noqa: BLE001 — لا نريد كسر إنشاء Lead لو Celery معطّل
+    except Exception:
         logger.exception("Failed to dispatch notifications for lead #%s", instance.id)

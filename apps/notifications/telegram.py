@@ -53,7 +53,9 @@ def send_message(text: str, *, parse_mode: str = "HTML") -> dict | None:
         with urlopen(request, timeout=10) as response:
             body = json.loads(response.read().decode("utf-8"))
     except HTTPError as exc:
-        text_body = exc.read().decode("utf-8", errors="ignore") if hasattr(exc, "read") else str(exc)
+        text_body = (
+            exc.read().decode("utf-8", errors="ignore") if hasattr(exc, "read") else str(exc)
+        )
         raise TelegramError(f"telegram HTTPError {exc.code}: {text_body}") from exc
     except (URLError, ValueError, TimeoutError) as exc:
         raise TelegramError(f"telegram connection error: {exc}") from exc

@@ -1,6 +1,7 @@
 """View tests — TESTING.md §Unit."""
 
 import pytest
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from apps.accounts.factories import InvestorFactory
@@ -26,9 +27,8 @@ class TestRegisterView:
             },
         )
         assert response.status_code == 302  # redirect
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
-        assert User.objects.filter(email="new@test.com").exists()
+        user_model = get_user_model()
+        assert user_model.objects.filter(email="new@test.com").exists()
         # session-cookie يثبت تسجيل الدخول التلقائي
         assert "_auth_user_id" in client.session
 

@@ -5,114 +5,329 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#1B2A4E" />
-    <title>{% block title %}خوارزميات — منصة الاشتراكات للمعاهد{% endblock %}</title>
+    <title>
+      {% block title %}خوارزميات — منصة الاشتراكات للمعاهد{% endblock %}
+    </title>
     <meta name="description"
-          content="{% block description %}منصة رقمية تربط أصحاب المعاهد والمستثمرين بباقات خدمات تعليمية احترافية بنموذج اشتراك ذكي.{% endblock %}" />
-
+          content="{% block description %}
+                     منصة رقمية تربط أصحاب المعاهد والمستثمرين بباقات خدمات تعليمية احترافية بنموذج اشتراك ذكي.
+                   {% endblock %}" />
     {# Open Graph (INFRASTRUCTURE.md §3) #}
     <meta property="og:site_name" content="خوارزميات" />
-    <meta property="og:title" content="{% block og_title %}خوارزميات{% endblock %}" />
-    <meta property="og:description" content="{% block og_description %}منصة الاشتراكات للمعاهد والمستثمرين{% endblock %}" />
+    <meta property="og:title"
+          content="{% block og_title %}
+                     خوارزميات
+                   {% endblock %}" />
+    <meta property="og:description"
+          content="{% block og_description %}
+                     منصة الاشتراكات للمعاهد والمستثمرين
+                   {% endblock %}" />
     <meta property="og:type" content="{% block og_type %}website{% endblock %}" />
     <meta property="og:locale" content="ar_SA" />
-    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
-
+    <meta property="og:url"
+          content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
     {# Twitter Card #}
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="{% block tw_title %}{{ self.og_title }}{% endblock %}" />
-    <meta name="twitter:description" content="{% block tw_description %}{{ self.og_description }}{% endblock %}" />
-
+    <meta name="twitter:title"
+          content="{% block tw_title %}
+                     {{ self.og_title }}
+                   {% endblock %}" />
+    <meta name="twitter:description"
+          content="{% block tw_description %}
+                     {{ self.og_description }}
+                   {% endblock %}" />
     {# Robots #}
     <meta name="robots" content="{% block robots %}index,follow{% endblock %}" />
-
     {# Performance: preconnect + DNS-prefetch (INFRASTRUCTURE.md §3) #}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://unpkg.com" />
-
     {# Fonts — Cairo #}
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&display=swap"
           rel="stylesheet" />
-
     {# Tailwind compiled output #}
     <link rel="stylesheet" href="{% static 'dist/styles.css' %}" />
-
     {# HTMX (TECH_STACK.md) #}
-    <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
-
+    <script src="https://unpkg.com/htmx.org@1.9.12"
+            integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+            crossorigin="anonymous"></script>
     {% block extra_head %}{% endblock %}
   </head>
   <body class="min-h-screen flex flex-col">
-    <header class="bg-primary text-white shadow-md">
-      <nav class="container mx-auto flex items-center justify-between px-4 py-4">
-        <a href="{% url 'landing:home' %}" class="text-2xl font-black">خوارزميات</a>
-        <div class="flex items-center gap-4">
-          {% block nav %}
-            <a href="{% url 'packages:list' %}" class="text-sm font-bold text-white hover:text-accent">الباقات</a>
+    <div class="h-1 bg-gradient-to-l from-success via-accent to-primary"
+         aria-hidden="true"></div>
+    <header class="border-b border-white/10 bg-primary text-white shadow-lg">
+      <nav class="container mx-auto flex items-center justify-between gap-4 px-4 py-4">
+        <a href="{% url 'landing:home' %}"
+           class="flex min-w-0 items-center gap-2"
+           aria-label="خوارزميات — منصة المعاهد">
+          <span class="inline-flex h-6 w-9 items-center justify-center rounded bg-white px-1 shadow-sm">
+            <img src="{% static 'images/logo.png' %}"
+                 alt="شعار خوارزميات"
+                 width="28"
+                 height="16"
+                 class="block object-contain"
+                 style="width: 28px;
+                        height: 16px;
+                        max-width: 28px;
+                        max-height: 16px;
+                        object-fit: contain" />
+          </span>
+          <span class="text-sm font-black sm:hidden">خوارزميات</span>
+          <span class="hidden text-sm font-black sm:inline md:text-base">خوارزميات — منصة المعاهد</span>
+        </a>
+        {% block nav %}
+          <div class="hidden items-center gap-4 md:flex">
+            <a href="{% url 'packages:list' %}"
+               class="rounded-md px-3 py-2 text-sm font-bold text-white transition hover:bg-white/10 hover:text-accent">الباقات</a>
             {% if user.is_authenticated and user.is_staff_role %}
-              <a href="{% url 'dashboard:home' %}" class="text-sm font-bold text-white hover:text-accent">لوحة الإدارة</a>
+              <a href="{% url 'dashboard:home' %}"
+                 class="rounded-md px-3 py-2 text-sm font-bold text-white transition hover:bg-white/10 hover:text-accent">لوحة الإدارة</a>
             {% endif %}
             {% if user.is_authenticated and user.is_investor %}
-              <a href="{% url 'investor_profile:overview' %}" class="text-sm font-bold text-white hover:text-accent">حسابي</a>
+              <a href="{% url 'investor_profile:overview' %}"
+                 class="rounded-md px-3 py-2 text-sm font-bold text-white transition hover:bg-white/10 hover:text-accent">حسابي</a>
             {% endif %}
             {% if user.is_authenticated %}
               <span class="hidden text-sm text-neutral-100 sm:inline">مرحباً، {{ user.first_name }}</span>
               <form method="post" action="{% url 'accounts:logout' %}" class="inline">
                 {% csrf_token %}
-                <button type="submit" class="text-sm font-bold text-white hover:text-accent">خروج</button>
+                <button type="submit"
+                        class="rounded-md px-3 py-2 text-sm font-bold text-white transition hover:bg-white/10 hover:text-accent">
+                  خروج
+                </button>
               </form>
             {% else %}
-              <a href="{% url 'accounts:login' %}" class="text-sm font-bold text-white hover:text-accent">دخول</a>
-              <a href="{% url 'accounts:register' %}" class="rounded-md bg-accent px-4 py-2 text-sm font-bold text-white hover:bg-accent-dark">تسجيل</a>
+              <a href="{% url 'accounts:login' %}"
+                 class="rounded-md px-3 py-2 text-sm font-bold text-white transition hover:bg-white/10 hover:text-accent">دخول</a>
+              <a href="{% url 'accounts:register' %}"
+                 class="rounded-md bg-accent px-4 py-2 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-lg">تسجيل</a>
             {% endif %}
-          {% endblock %}
-        </div>
+          </div>
+          <details class="group relative md:hidden">
+            <summary class="inline-flex size-11 cursor-pointer list-none items-center justify-center rounded-md border border-white/15 bg-white/10 text-white transition hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-accent [&::-webkit-details-marker]:hidden"
+                     aria-label="فتح قائمة التنقل">
+              <svg class="size-6"
+                   aria-hidden="true"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2.5"
+                   stroke-linecap="round">
+                <path d="M4 7h16" />
+                <path d="M4 12h16" />
+                <path d="M4 17h16" />
+              </svg>
+            </summary>
+            <div class="absolute left-0 top-14 z-50 min-w-56 rounded-lg border border-primary/10 bg-white p-2 text-primary shadow-xl">
+              <a href="{% url 'packages:list' %}"
+                 class="block rounded-md px-4 py-3 text-sm font-bold transition hover:bg-accent/10 hover:text-accent">الباقات</a>
+              {% if user.is_authenticated and user.is_staff_role %}
+                <a href="{% url 'dashboard:home' %}"
+                   class="block rounded-md px-4 py-3 text-sm font-bold transition hover:bg-accent/10 hover:text-accent">لوحة الإدارة</a>
+              {% endif %}
+              {% if user.is_authenticated and user.is_investor %}
+                <a href="{% url 'investor_profile:overview' %}"
+                   class="block rounded-md px-4 py-3 text-sm font-bold transition hover:bg-accent/10 hover:text-accent">حسابي</a>
+              {% endif %}
+              {% if user.is_authenticated %}
+                <form method="post" action="{% url 'accounts:logout' %}">
+                  {% csrf_token %}
+                  <button type="submit"
+                          class="block w-full rounded-md px-4 py-3 text-right text-sm font-bold transition hover:bg-accent/10 hover:text-accent">
+                    خروج
+                  </button>
+                </form>
+              {% else %}
+                <a href="{% url 'accounts:login' %}"
+                   class="block rounded-md px-4 py-3 text-sm font-bold transition hover:bg-accent/10 hover:text-accent">دخول</a>
+                <a href="{% url 'accounts:register' %}"
+                   class="mt-1 block rounded-md bg-accent px-4 py-3 text-center text-sm font-bold text-white transition hover:bg-accent-dark">تسجيل</a>
+              {% endif %}
+            </div>
+          </details>
+        {% endblock %}
       </nav>
     </header>
-
-    <main class="flex-1 {% block main_class %}container mx-auto px-4 py-8{% endblock %}">
+    <main class="flex-1
+                 {% block main_class %}container mx-auto px-4 py-8{% endblock %}">
       {% block content %}{% endblock %}
     </main>
-
-    <footer class="bg-primary text-white mt-auto" role="contentinfo">
+    <footer class="bg-primary text-white mt-auto border-t border-accent/20 shadow-[0_-12px_40px_rgba(27,42,78,0.12)]"
+            role="contentinfo">
       <div class="container mx-auto px-4 py-12">
         <div class="grid gap-8 md:grid-cols-4">
-          <div class="md:col-span-2">
-            <a href="{% url 'landing:home' %}" class="text-2xl font-black">خوارزميات</a>
-            <p class="mt-3 max-w-md text-sm text-white/75">
+          <div>
+            <a href="{% url 'landing:home' %}"
+               class="inline-flex items-center gap-2"
+               aria-label="خوارزميات — منصة المعاهد">
+              <span class="inline-flex h-7 w-11 items-center justify-center rounded bg-white px-1 shadow-sm">
+                <img src="{% static 'images/logo.png' %}"
+                     alt="شعار خوارزميات"
+                     width="34"
+                     height="19"
+                     class="block object-contain"
+                     style="width: 34px;
+                            height: 19px;
+                            max-width: 34px;
+                            max-height: 19px;
+                            object-fit: contain" />
+              </span>
+              <span class="text-sm font-black">خوارزميات — منصة المعاهد</span>
+            </a>
+            <p class="mt-4 max-w-md text-sm text-white/75">
               منصة الاشتراكات الذكية للمعاهد التعليمية والمستثمرين في القطاع التعليمي.
             </p>
           </div>
+          {% if site_settings.contact_phone or site_settings.whatsapp_url or site_settings.has_social_links %}
+            <nav aria-label="بيانات التواصل">
+              <h2 class="mb-3 text-sm font-bold uppercase tracking-wider text-accent">التواصل</h2>
+              <ul class="space-y-2 text-sm text-white/85">
+                {% if site_settings.contact_phone %}
+                  <li>
+                    <a href="{{ site_settings.contact_phone_href }}"
+                       class="inline-flex items-center gap-2 hover:text-accent">
+                      <svg class="size-5"
+                           aria-hidden="true"
+                           viewBox="0 0 24 24"
+                           fill="none"
+                           stroke="currentColor"
+                           stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.35 1.89.66 2.78a2 2 0 0 1-.45 2.11L8.09 9.84a16 16 0 0 0 6.07 6.07l1.23-1.23a2 2 0 0 1 2.11-.45c.89.31 1.82.53 2.78.66A2 2 0 0 1 22 16.92Z" />
+                      </svg>
+                      <span dir="ltr">{{ site_settings.contact_phone }}</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if site_settings.whatsapp_url %}
+                  <li>
+                    <a href="{{ site_settings.whatsapp_url }}"
+                       class="inline-flex items-center gap-2 hover:text-accent"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                      <svg class="size-5"
+                           aria-hidden="true"
+                           viewBox="0 0 24 24"
+                           fill="currentColor">
+                        <path d="M20.52 3.48A11.84 11.84 0 0 0 12.08 0C5.53 0 .2 5.33.2 11.88c0 2.1.55 4.15 1.6 5.96L.1 24l6.3-1.65a11.87 11.87 0 0 0 5.68 1.45h.01c6.55 0 11.88-5.33 11.88-11.88 0-3.18-1.24-6.16-3.45-8.44ZM12.09 21.8h-.01a9.86 9.86 0 0 1-5.02-1.37l-.36-.22-3.74.98 1-3.65-.24-.38a9.84 9.84 0 0 1-1.51-5.28c0-5.45 4.43-9.88 9.88-9.88a9.8 9.8 0 0 1 6.98 2.9 9.82 9.82 0 0 1 2.9 7.02c0 5.45-4.43 9.88-9.88 9.88Zm5.42-7.39c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35Z" />
+                      </svg>
+                      <span>واتساب</span>
+                    </a>
+                  </li>
+                {% endif %}
+              </ul>
+              {% if site_settings.has_social_links %}
+                <div class="mt-4 flex flex-wrap items-center gap-2">
+                  {% if site_settings.snapchat_url %}
+                    <a href="{{ site_settings.snapchat_url }}"
+                       class="inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-accent hover:text-white"
+                       aria-label="سناب شات"
+                       title="سناب شات"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                      <svg class="size-5"
+                           aria-hidden="true"
+                           viewBox="0 0 24 24"
+                           fill="currentColor">
+                        <path d="M12 2.5c-2.68 0-4.85 2.08-4.85 4.65v2.28c0 .3-.2.57-.49.67l-1.02.35a.8.8 0 0 0-.16 1.45l1.31.76c.25.14.39.42.35.7-.12.89-.61 1.6-1.47 2.13-.64.39-.45 1.36.28 1.49.52.09 1.15.22 1.46.43.4.27.5.98 1.14.98.47 0 .74-.24 1.13-.24.51 0 .98.42 1.36.65.3.18.63.27.96.27s.66-.09.96-.27c.38-.23.85-.65 1.36-.65.39 0 .66.24 1.13.24.64 0 .74-.71 1.14-.98.31-.21.94-.34 1.46-.43.73-.13.92-1.1.28-1.49-.86-.53-1.35-1.24-1.47-2.13a.72.72 0 0 1 .35-.7l1.31-.76a.8.8 0 0 0-.16-1.45l-1.02-.35a.72.72 0 0 1-.49-.67V7.15c0-2.57-2.17-4.65-4.85-4.65Z" />
+                      </svg>
+                    </a>
+                  {% endif %}
+                  {% if site_settings.x_url %}
+                    <a href="{{ site_settings.x_url }}"
+                       class="inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-accent hover:text-white"
+                       aria-label="X"
+                       title="X"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                      <svg class="size-4"
+                           aria-hidden="true"
+                           viewBox="0 0 24 24"
+                           fill="currentColor">
+                        <path d="M18.9 2h3.3l-7.2 8.23L23.5 22h-6.65l-5.2-6.8L5.7 22H2.4l7.7-8.8L1.95 2h6.82l4.7 6.22L18.9 2Zm-1.16 17.93h1.83L7.78 3.96H5.82l11.92 15.97Z" />
+                      </svg>
+                    </a>
+                  {% endif %}
+                  {% if site_settings.instagram_url %}
+                    <a href="{{ site_settings.instagram_url }}"
+                       class="inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-accent hover:text-white"
+                       aria-label="إنستقرام"
+                       title="إنستقرام"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                      <svg class="size-5"
+                           aria-hidden="true"
+                           viewBox="0 0 24 24"
+                           fill="none"
+                           stroke="currentColor"
+                           stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                      </svg>
+                    </a>
+                  {% endif %}
+                  {% if site_settings.tiktok_url %}
+                    <a href="{{ site_settings.tiktok_url }}"
+                       class="inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-accent hover:text-white"
+                       aria-label="تيك توك"
+                       title="تيك توك"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                      <svg class="size-5"
+                           aria-hidden="true"
+                           viewBox="0 0 24 24"
+                           fill="currentColor">
+                        <path d="M15 3c.4 2.45 1.77 4.05 4 4.35v3.04a7.42 7.42 0 0 1-4-1.17v5.68A6.1 6.1 0 1 1 8.9 8.8c.38 0 .75.04 1.1.11v3.29a2.92 2.92 0 1 0 1.99 2.77V3H15Z" />
+                      </svg>
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </nav>
+          {% endif %}
           <nav aria-label="روابط سريعة">
             <h2 class="mb-3 text-sm font-bold uppercase tracking-wider text-accent">روابط</h2>
             <ul class="space-y-2 text-sm text-white/85">
-              <li><a href="{% url 'landing:home' %}#why" class="hover:text-accent">لماذا خوارزميات</a></li>
-              <li><a href="{% url 'packages:list' %}" class="hover:text-accent">الباقات</a></li>
-              <li><a href="{% url 'landing:home' %}#faq" class="hover:text-accent">الأسئلة الشائعة</a></li>
-              <li><a href="{% url 'landing:home' %}#booking" class="hover:text-accent">احجز الآن</a></li>
+              <li>
+                <a href="{% url 'landing:home' %}#why" class="hover:text-accent">لماذا خوارزميات</a>
+              </li>
+              <li>
+                <a href="{% url 'packages:list' %}" class="hover:text-accent">الباقات</a>
+              </li>
+              <li>
+                <a href="{% url 'landing:home' %}#faq" class="hover:text-accent">الأسئلة الشائعة</a>
+              </li>
+              <li>
+                <a href="{% url 'landing:home' %}#booking" class="hover:text-accent">احجز الآن</a>
+              </li>
             </ul>
           </nav>
           <nav aria-label="حسابي">
             <h2 class="mb-3 text-sm font-bold uppercase tracking-wider text-accent">حسابي</h2>
             <ul class="space-y-2 text-sm text-white/85">
               {% if user.is_authenticated %}
-                <li><a href="{% url 'accounts:logout' %}" class="hover:text-accent">تسجيل الخروج</a></li>
+                <li>
+                  <a href="{% url 'accounts:logout' %}" class="hover:text-accent">تسجيل الخروج</a>
+                </li>
               {% else %}
-                <li><a href="{% url 'accounts:login' %}" class="hover:text-accent">تسجيل الدخول</a></li>
-                <li><a href="{% url 'accounts:register' %}" class="hover:text-accent">إنشاء حساب</a></li>
+                <li>
+                  <a href="{% url 'accounts:login' %}" class="hover:text-accent">تسجيل الدخول</a>
+                </li>
+                <li>
+                  <a href="{% url 'accounts:register' %}" class="hover:text-accent">إنشاء حساب</a>
+                </li>
               {% endif %}
             </ul>
           </nav>
         </div>
       </div>
       <div class="border-t border-white/10">
-        <div class="container mx-auto flex flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-white/70 sm:flex-row">
-          <p>© {% now "Y" %} خوارزميات — جميع الحقوق محفوظة</p>
-          <p>صُنعت بـ Django · Tailwind · HTMX</p>
+        <div class="container mx-auto px-4 py-4 text-center text-xs text-white/70">
+          <p>© {% now "Y" %} {{ site_settings.copyright_text }}</p>
         </div>
       </div>
     </footer>
-
     {% block extra_body %}{% endblock %}
   </body>
 </html>

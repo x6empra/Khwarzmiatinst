@@ -1,19 +1,27 @@
-{# Hero — Spline lazy + Glassmorphism fallback. DESIGN_GUIDE.md §Visual Style #}
-<section class="hero relative -mx-4 overflow-hidden bg-primary text-white" aria-labelledby="hero-title">
-  {# Background gradient + animated orbs (CSS-only fallback) #}
-  <div class="hero-bg absolute inset-0" aria-hidden="true">
-    <div class="hero-orb hero-orb-1"></div>
-    <div class="hero-orb hero-orb-2"></div>
-    <div class="hero-orb hero-orb-3"></div>
+{% load static %}
+{# Hero — video background + Spline lazy fallback. DESIGN_GUIDE.md §Visual Style #}
+<section class="hero relative overflow-hidden bg-primary text-white"
+         aria-labelledby="hero-title">
+  <div class="hero-media absolute inset-0" aria-hidden="true">
+    <video class="hero-video absolute inset-0 size-full object-cover"
+           autoplay
+           muted
+           loop
+           playsinline
+           preload="metadata"
+           poster="{% static 'videos/hero-training-poster.jpg' %}">
+      <source src="{% static 'videos/hero-training.webm' %}" type="video/webm" />
+    </video>
+    <div class="hero-bg absolute inset-0"></div>
   </div>
-
   <div class="relative container mx-auto grid items-center gap-12 px-4 py-20 lg:grid-cols-2 lg:py-28">
     {# Left — copy #}
     <div class="text-center lg:text-right">
       <p class="mb-3 inline-block rounded-full bg-white/10 px-4 py-1 text-xs font-bold backdrop-blur">
         🎯 منصة الاشتراكات للمعاهد التعليمية
       </p>
-      <h1 id="hero-title" class="text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
+      <h1 id="hero-title"
+          class="text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
         نمَوّ معهدك يبدأ من
         <span class="text-accent">باقة واحدة</span>
       </h1>
@@ -23,18 +31,24 @@
       </p>
       <div class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
         <a href="#booking" class="btn-primary">اشترك الآن</a>
-        <a href="#packages" class="rounded-md border border-white/30 bg-white/5 px-6 py-3 font-medium text-white backdrop-blur transition hover:bg-white/15">
+        <a href="#packages"
+           class="rounded-md border border-white/30 bg-white/5 px-6 py-3 font-medium text-white backdrop-blur transition hover:bg-white/15">
           عرض الباقات
         </a>
       </div>
-
-      <ul class="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-white/80 lg:justify-start" role="list">
-        <li class="flex items-center gap-2"><span class="text-success" aria-hidden="true">✓</span> تجربة آمنة</li>
-        <li class="flex items-center gap-2"><span class="text-success" aria-hidden="true">✓</span> دعم فني سريع</li>
-        <li class="flex items-center gap-2"><span class="text-success" aria-hidden="true">✓</span> بدون التزام مدفوع</li>
+      <ul class="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-white/80 lg:justify-start"
+          role="list">
+        <li class="flex items-center gap-2">
+          <span class="text-success" aria-hidden="true">✓</span> تجربة آمنة
+        </li>
+        <li class="flex items-center gap-2">
+          <span class="text-success" aria-hidden="true">✓</span> دعم فني سريع
+        </li>
+        <li class="flex items-center gap-2">
+          <span class="text-success" aria-hidden="true">✓</span> إدارة وتدريب متنوع
+        </li>
       </ul>
     </div>
-
     {# Right — 3D scene placeholder (lazy loads Spline if SPLINE_SCENE_URL set) #}
     <div class="hero-stage relative aspect-square w-full max-w-lg lg:mx-auto"
          data-spline-url="{{ spline_scene_url|default:'' }}"
@@ -59,20 +73,12 @@
     </div>
   </div>
 </section>
-
 <style>
   .hero { isolation: isolate; }
+  .hero-video { opacity: .58; pointer-events: none; }
   .hero-bg { background:
-      radial-gradient(circle at 20% 30%, rgba(94,132,194,0.3), transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(243,156,18,0.18), transparent 50%),
-      linear-gradient(135deg, #1B2A4E 0%, #2C4A7C 100%); }
-  .hero-orb { position: absolute; border-radius: 9999px; filter: blur(80px); opacity: 0.55; pointer-events: none; }
-  .hero-orb-1 { width: 320px; height: 320px; background: #3F66A8; top: -80px; right: -80px; animation: orbA 12s ease-in-out infinite alternate; }
-  .hero-orb-2 { width: 260px; height: 260px; background: #F39C12; bottom: -60px; left: 10%; animation: orbB 14s ease-in-out infinite alternate; opacity: 0.35; }
-  .hero-orb-3 { width: 200px; height: 200px; background: #27AE60; top: 30%; left: 40%; animation: orbC 18s ease-in-out infinite alternate; opacity: 0.25; }
-  @keyframes orbA { from { transform: translate(0,0); } to { transform: translate(-30px, 40px); } }
-  @keyframes orbB { from { transform: translate(0,0); } to { transform: translate(40px, -30px); } }
-  @keyframes orbC { from { transform: translate(0,0) scale(1); } to { transform: translate(-20px, 20px) scale(1.1); } }
+      linear-gradient(90deg, rgba(27,42,78,.9) 0%, rgba(27,42,78,.62) 48%, rgba(27,42,78,.82) 100%),
+      linear-gradient(180deg, rgba(27,42,78,.08) 0%, rgba(27,42,78,.45) 100%); }
 
   .hero-card { animation: float 6s ease-in-out infinite alternate; }
   @keyframes float { from { transform: translateY(0); } to { transform: translateY(-12px); } }
@@ -86,16 +92,25 @@
 
   /* DESIGN_GUIDE.md §Spline tip #3: prefers-reduced-motion */
   @media (prefers-reduced-motion: reduce) {
-    .hero-orb, .hero-card { animation: none !important; }
+    .hero-video { display: none; }
+    .hero-card { animation: none !important; }
   }
 
-  /* Mobile: keep static, no animations beyond base */
+  /* Mobile: keep the video subtle behind the copy. */
   @media (max-width: 640px) {
-    .hero-orb-3 { display: none; }
+    .hero-video { opacity: .42; }
   }
 </style>
-
 <script>
+  (function () {
+    const video = document.querySelector('.hero-video');
+    if (!video) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      video.pause();
+      video.removeAttribute('autoplay');
+    }
+  })();
+
   // Lazy-load Spline only if SPLINE_SCENE_URL provided + IntersectionObserver supported + not reduced-motion + not mobile
   (function () {
     const stage = document.querySelector('.hero-stage');

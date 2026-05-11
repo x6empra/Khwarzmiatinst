@@ -1,18 +1,15 @@
 {% extends "base.html" %}
-
 {% block title %}الباقات — خوارزميات{% endblock %}
-
 {% block description %}اختر الباقة المناسبة لمعهدك — باقات متنوعة لتطوير منصة تعليمية متكاملة.{% endblock %}
-
 {% block content %}
-  <section class="py-8">
-    <header class="mb-10 text-center">
-      <h1 class="text-3xl font-black text-primary md:text-4xl">باقاتنا</h1>
+  <section class="py-10">
+    <header class="mb-10 rounded-lg border border-primary/10 bg-white/75 px-6 py-10 text-center shadow-md backdrop-blur">
+      <p class="section-eyebrow">اختر خطتك</p>
+      <h1 class="mt-3 text-3xl font-black text-primary md:text-4xl">باقاتنا</h1>
       <p class="mx-auto mt-3 max-w-2xl text-base text-neutral-700">
         اختر الباقة الأنسب لاحتياجات معهدك. كل الباقات قابلة للتخصيص.
       </p>
     </header>
-
     {% if packages %}
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
         {% for package in packages %}
@@ -21,12 +18,14 @@
       </div>
     {% else %}
       {# Empty state — DESIGN_GUIDE.md §States #}
-      <div class="mx-auto max-w-md rounded-lg bg-white p-12 text-center shadow-md" role="status">
+      <div class="card interactive-card mx-auto max-w-md p-12 text-center"
+           role="status">
         <div class="mb-4 text-5xl" aria-hidden="true">📭</div>
         <h2 class="mb-2 text-xl font-bold text-primary">لا توجد باقات معلَنة بعد</h2>
         <p class="text-sm text-neutral-700">
           نعمل على تحديث باقاتنا. عُد قريباً أو
-          <a href="{% url 'landing:home' %}" class="font-bold text-accent hover:text-accent-dark">تواصل معنا</a>
+          <a href="{% url 'landing:home' %}"
+             class="font-bold text-accent hover:text-accent-dark">تواصل معنا</a>
           لتفصيل عرض خاص بمعهدك.
         </p>
       </div>

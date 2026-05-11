@@ -4,6 +4,8 @@ Auth forms — Tailwind-ready.
 استخدم Django Forms (PERMISSIONS.md): server-side validation.
 """
 
+from typing import ClassVar
+
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
@@ -35,8 +37,8 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "phone"]
-        widgets = {
+        fields = ("first_name", "last_name", "email", "phone")
+        widgets: ClassVar[dict[str, forms.Widget]] = {
             "first_name": forms.TextInput(attrs={"class": _BASE_INPUT}),
             "last_name": forms.TextInput(attrs={"class": _BASE_INPUT}),
             "email": forms.EmailInput(attrs={"class": _BASE_INPUT, "autocomplete": "email"}),
@@ -78,7 +80,9 @@ class LoginForm(forms.Form):
     )
     password = forms.CharField(
         label=_("كلمة المرور"),
-        widget=forms.PasswordInput(attrs={"class": _BASE_INPUT, "autocomplete": "current-password"}),
+        widget=forms.PasswordInput(
+            attrs={"class": _BASE_INPUT, "autocomplete": "current-password"}
+        ),
     )
     remember_me = forms.BooleanField(
         label=_("تذكرني"),

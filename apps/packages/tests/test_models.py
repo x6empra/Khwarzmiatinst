@@ -4,6 +4,7 @@ from decimal import Decimal
 
 import pytest
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 from apps.packages.factories import PackageFactory
 from apps.packages.models import Package
@@ -22,7 +23,7 @@ class TestPackageModel:
 
     def test_slug_unique(self):
         PackageFactory(name="X", slug="duplicate")
-        with pytest.raises(Exception):
+        with pytest.raises(IntegrityError):
             PackageFactory(name="Y", slug="duplicate")
 
     def test_default_ordering_by_display_order(self):

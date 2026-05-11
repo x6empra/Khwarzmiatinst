@@ -14,14 +14,13 @@ from playwright.sync_api import Page, expect
 pytestmark = pytest.mark.django_db(transaction=True)
 
 
-def test_visitor_sees_hero_and_packages(
-    page: Page, live_server_url: str, seeded_packages
-) -> None:
+def test_visitor_sees_hero_and_packages(page: Page, live_server_url: str, seeded_packages) -> None:
     """السيناريو 1: زائر يفتح / ويرى Hero + الباقات."""
     page.goto(live_server_url + "/")
 
     # Hero — title page + h1 موجود
     import re
+
     expect(page).to_have_title(re.compile(r"خوارزميات"))
     expect(page.locator("#hero-title")).to_be_visible()
 
@@ -35,9 +34,7 @@ def test_visitor_sees_hero_and_packages(
     expect(page.locator("#booking-form")).to_be_visible()
 
 
-def test_visitor_submits_lead_form_htmx(
-    page: Page, live_server_url: str, seeded_packages
-) -> None:
+def test_visitor_submits_lead_form_htmx(page: Page, live_server_url: str, seeded_packages) -> None:
     """السيناريو 2: زائر يملأ النموذج ويرسل (HTMX) → Modal أخضر + Lead في DB."""
     page.goto(live_server_url + "/#booking")
 

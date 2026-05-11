@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 @shared_task(
     bind=True,
     autoretry_for=(TelegramError,),
-    retry_backoff=True,        # 1, 2, 4, ... ثانية
+    retry_backoff=True,  # 1, 2, 4, ... ثانية
     retry_backoff_max=60,
     retry_jitter=True,
     max_retries=3,

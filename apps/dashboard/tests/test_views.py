@@ -146,6 +146,7 @@ class TestLeadDelete:
         response = client.delete(reverse("dashboard:lead_delete", args=[lead.id]))
         assert response.status_code == 200
         from apps.leads.models import Lead
+
         assert not Lead.objects.filter(id=lead.id).exists()
 
     def test_supervisor_403(self, client):

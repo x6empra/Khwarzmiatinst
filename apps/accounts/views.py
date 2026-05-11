@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.views.decorators.http import require_GET, require_http_methods
+from django.views.decorators.http import require_http_methods
 
 from .forms import LoginForm, RegisterForm
 

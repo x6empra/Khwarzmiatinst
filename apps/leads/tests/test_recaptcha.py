@@ -2,8 +2,6 @@
 
 from unittest.mock import patch
 
-import pytest
-
 from apps.leads.recaptcha import verify_recaptcha
 
 

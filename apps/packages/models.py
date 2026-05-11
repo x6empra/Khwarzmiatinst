@@ -65,10 +65,8 @@ class Package(models.Model):
     class Meta:
         verbose_name = _("باقة")
         verbose_name_plural = _("الباقات")
-        ordering = ["display_order", "-created_at"]
-        indexes = [
-            models.Index(fields=["is_active", "display_order"]),
-        ]
+        ordering = ["display_order", "-created_at"]  # noqa: RUF012
+        indexes = [models.Index(fields=["is_active", "display_order"])]  # noqa: RUF012
 
     def __str__(self) -> str:
         return self.name

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from apps.accounts.factories import (
     InvestorFactory,

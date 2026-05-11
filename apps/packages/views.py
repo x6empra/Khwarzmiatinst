@@ -18,7 +18,7 @@ class PackageViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.
     """Read-only public endpoint — only active packages."""
 
     serializer_class = PackageSerializer
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
     lookup_field = "slug"
 
     def get_queryset(self):

@@ -1,7 +1,6 @@
 """Lead model tests — TESTING.md §Unit (DATABASE.md §4)."""
 
 import pytest
-from django.db import IntegrityError
 from django.db.models import ProtectedError
 
 from apps.leads.factories import LeadFactory
@@ -39,6 +38,7 @@ class TestLeadModel:
     def test_investor_set_null_on_delete(self):
         """DATABASE.md §Relations: Lead → User(investor) on_delete=SET_NULL."""
         from apps.accounts.factories import InvestorFactory
+
         investor = InvestorFactory()
         lead = LeadFactory(investor=investor)
 
@@ -48,5 +48,8 @@ class TestLeadModel:
 
     def test_status_choices_are_four(self):
         assert {choice[0] for choice in LeadStatus.choices} == {
-            "new", "in_progress", "closed", "cancelled"
+            "new",
+            "in_progress",
+            "closed",
+            "cancelled",
         }

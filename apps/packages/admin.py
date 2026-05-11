@@ -1,5 +1,7 @@
 """Admin for Package — Manager only via Django Admin (PERMISSIONS.md)."""
 
+from typing import ClassVar
+
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
@@ -22,7 +24,7 @@ class PackageAdmin(admin.ModelAdmin):
     search_fields = ("name", "description")
     ordering = ("display_order", "-created_at")
     list_editable = ("is_active", "is_featured", "display_order")
-    prepopulated_fields = {"slug": ("name",)}
+    prepopulated_fields: ClassVar[dict[str, tuple[str, ...]]] = {"slug": ("name",)}
     readonly_fields = ("thumb_large", "created_at", "updated_at")
 
     fieldsets = (

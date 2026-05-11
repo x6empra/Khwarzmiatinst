@@ -1,6 +1,7 @@
 """Landing F1 tests — TESTING.md §Unit + INFRASTRUCTURE.md §3."""
 
 import pytest
+from django.test import Client
 from django.urls import reverse
 
 from apps.packages.factories import PackageFactory
@@ -19,10 +20,10 @@ class TestLandingPage:
         body = response.content.decode()
         # Section IDs (anchors)
         assert 'id="hero-title"' in body or 'id="hero-' in body  # Hero
-        assert 'id="features-title"' in body                       # Features
-        assert 'id="packages-title"' in body                       # Packages
-        assert 'id="faq-title"' in body                            # FAQ
-        assert 'id="booking-title"' in body                        # Booking
+        assert 'id="features-title"' in body  # Features
+        assert 'id="packages-title"' in body  # Packages
+        assert 'id="faq-title"' in body  # FAQ
+        assert 'id="booking-title"' in body  # Booking
 
     def test_packages_appear(self, client):
         PackageFactory(name="ZooPackage", display_order=1)
@@ -39,6 +40,24 @@ class TestLandingPage:
         response = client.get(self.URL)
         # هل العنوان الأول من FAQS موجود؟
         assert "كيف تعمل خوارزميات؟".encode() in response.content
+
+    def test_hero_video_background_present(self, client):
+        body = client.get(self.URL).content.decode()
+        assert "<video" in body
+        assert "autoplay" in body
+        assert "muted" in body
+        assert "loop" in body
+        assert "playsinline" in body
+        assert "controls" not in body
+        assert "videos/hero-training.webm" in body
+        assert "videos/hero-training-poster.jpg" in body
+
+    def test_mobile_header_navigation_uses_dropdown(self, client: Client) -> None:
+        body = client.get(self.URL).content.decode()
+        assert 'aria-label="فتح قائمة التنقل"' in body
+        assert "md:hidden" in body
+        assert "md:flex" in body
+        assert "[&::-webkit-details-marker]:hidden" in body
 
 
 @pytest.mark.django_db

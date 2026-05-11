@@ -46,7 +46,7 @@ def test_supervisor_updates_status_via_htmx(
     _login(page, live_server_url, "sup@e2e.test")
     page.goto(live_server_url + "/dashboard/leads/")
 
-    row = page.locator(f'#lead-row-{lead.id}')
+    row = page.locator(f"#lead-row-{lead.id}")
     expect(row).to_be_visible()
     expect(row.locator(".badge-status-new")).to_be_visible()
 
@@ -61,9 +61,7 @@ def test_supervisor_updates_status_via_htmx(
     assert lead.status == LeadStatus.IN_PROGRESS
 
 
-def test_investor_blocked_from_dashboard(
-    page: Page, live_server_url: str, investor
-) -> None:
+def test_investor_blocked_from_dashboard(page: Page, live_server_url: str, investor) -> None:
     """السيناريو 7: مستثمر يحاول الوصول → 403."""
     _login(page, live_server_url, "investor@e2e.test")
     page.goto(live_server_url + "/dashboard/")

@@ -55,6 +55,21 @@
     </aside>
 
     {# Main content #}
-    <main>{% block dash_content %}{% endblock %}</main>
+    <main>
+      {% if messages %}
+        <div class="mb-4 space-y-2">
+          {% for msg in messages %}
+            <div class="rounded-md p-3 text-sm
+                        {% if msg.tags == 'success' %}bg-success/10 text-success border border-success/30
+                        {% elif msg.tags == 'error' %}bg-red-50 text-red-700 border border-red-200
+                        {% else %}bg-neutral-100 text-neutral-900{% endif %}"
+                 role="alert">
+              {{ msg }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% block dash_content %}{% endblock %}
+    </main>
   </div>
 {% endblock %}

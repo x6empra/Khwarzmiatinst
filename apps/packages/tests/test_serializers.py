@@ -30,6 +30,11 @@ class TestPackageSerializer:
         data = PackageSerializer(pkg).data
         assert data["image_url"] is None
 
+    def test_image_url_uses_package_image(self):
+        pkg = PackageFactory(image="packages/package-silver.png")
+        data = PackageSerializer(pkg).data
+        assert data["image_url"] == "/media/packages/package-silver.png"
+
     def test_features_serialized_as_list(self):
         pkg = PackageFactory(features=["x", "y", "z"])
         data = PackageSerializer(pkg).data

@@ -8,7 +8,7 @@
       <h1 class="text-2xl font-black text-primary md:text-3xl">إدارة الباقات</h1>
       <p class="mt-1 text-sm text-neutral-700">عرض الباقات وإحصاءات الطلبات لكل باقة.</p>
     </div>
-    <a href="/admin/packages/package/add/" class="btn-primary text-sm">+ إضافة باقة</a>
+    <a href="{% url 'dashboard:package_create' %}" class="btn-primary text-sm">+ إضافة باقة</a>
   </header>
 
   {% if packages %}
@@ -44,7 +44,7 @@
                 {% endif %}
               </td>
               <td class="px-4 py-3">
-                <a href="/admin/packages/package/{{ pkg.id }}/change/" class="text-sm font-bold text-accent hover:text-accent-dark">
+                <a href="{% url 'dashboard:package_edit' pkg.id %}" class="text-sm font-bold text-accent hover:text-accent-dark">
                   تعديل
                 </a>
               </td>
@@ -57,7 +57,7 @@
     <div class="card text-center py-12" role="status">
       <p class="text-4xl mb-2" aria-hidden="true">📦</p>
       <p class="font-bold text-primary">لا توجد باقات</p>
-      <a href="/admin/packages/package/add/" class="mt-3 inline-block btn-primary text-sm">إضافة أول باقة</a>
+      <a href="{% url 'dashboard:package_create' %}" class="mt-3 inline-block btn-primary text-sm">إضافة أول باقة</a>
     </div>
   {% endif %}
 {% endblock %}

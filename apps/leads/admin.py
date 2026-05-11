@@ -7,10 +7,10 @@ from django.utils.translation import gettext_lazy as _
 from .models import Lead, LeadStatus
 
 STATUS_COLORS = {
-    LeadStatus.NEW: "#F39C12",          # accent
+    LeadStatus.NEW: "#F39C12",  # accent
     LeadStatus.IN_PROGRESS: "#2563EB",  # blue
-    LeadStatus.CLOSED: "#27AE60",       # success
-    LeadStatus.CANCELLED: "#DC2626",    # red
+    LeadStatus.CLOSED: "#27AE60",  # success
+    LeadStatus.CANCELLED: "#DC2626",  # red
 }
 
 

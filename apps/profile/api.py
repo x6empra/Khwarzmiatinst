@@ -12,7 +12,7 @@ class OrdersListAPIView(generics.ListAPIView):
     """GET /api/profile/orders/ — IsInvestor + own only (API.md)."""
 
     serializer_class = LeadListSerializer
-    permission_classes = [IsAuthenticated, IsInvestor]
+    permission_classes = (IsAuthenticated, IsInvestor)
 
     def get_queryset(self):
         # Own only — مرجع PERMISSIONS.md §IsOwnerInvestor

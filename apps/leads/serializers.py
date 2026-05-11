@@ -1,9 +1,10 @@
 """DRF Serializers — see API.md §Leads."""
 
+from typing import ClassVar
+
 from rest_framework import serializers
 
 from apps.packages.models import Package
-from apps.packages.serializers import PackageSerializer
 
 from .models import Lead
 
@@ -22,8 +23,8 @@ class LeadCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lead
-        fields = ["name", "phone", "email", "package", "notes", "recaptcha_token"]
-        extra_kwargs = {
+        fields = ("name", "phone", "email", "package", "notes", "recaptcha_token")
+        extra_kwargs: ClassVar[dict[str, dict[str, bool]]] = {
             "notes": {"required": False, "allow_blank": True},
         }
 
@@ -62,6 +63,11 @@ class LeadStatusUpdateSerializer(serializers.Serializer):
     """PATCH /api/leads/<id>/status/."""
 
     status = serializers.ChoiceField(
-        choices=[("new", "new"), ("in_progress", "in_progress"), ("closed", "closed"), ("cancelled", "cancelled")]
+        choices=[
+            ("new", "new"),
+            ("in_progress", "in_progress"),
+            ("closed", "closed"),
+            ("cancelled", "cancelled"),
+        ]
     )
     note = serializers.CharField(required=False, allow_blank=True, max_length=500)

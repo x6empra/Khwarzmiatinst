@@ -8,23 +8,48 @@
     font-family: 'Cairo', 'Inter', system-ui, sans-serif;
   }
   body {
-    @apply bg-neutral-50 text-neutral-900 antialiased;
+    @apply text-neutral-900 antialiased;
+    background:
+      linear-gradient(180deg, rgba(244, 246, 247, 0.96) 0%, rgba(255, 248, 237, 0.92) 42%, rgba(239, 248, 243, 0.94) 100%),
+      radial-gradient(circle at 8% 12%, rgba(39, 174, 96, 0.12), transparent 28%),
+      radial-gradient(circle at 86% 18%, rgba(243, 156, 18, 0.16), transparent 30%),
+      #F4F6F7;
   }
   *:focus-visible {
     @apply outline-none ring-2 ring-accent ring-offset-2;
+  }
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea {
+    @apply border-primary/20 bg-white/95 shadow-sm transition focus:border-accent focus:ring-2 focus:ring-accent;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-md bg-accent px-6 py-3 font-bold text-white transition hover:bg-accent-dark focus-visible:ring-2 focus-visible:ring-accent active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center rounded-md bg-accent px-6 py-3 font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-lg focus-visible:ring-2 focus-visible:ring-accent active:scale-95 disabled:cursor-not-allowed disabled:opacity-50;
     min-height: 56px;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-md border border-primary px-6 py-3 font-medium text-primary transition hover:bg-primary hover:text-white;
+    @apply inline-flex items-center justify-center rounded-md border border-primary/30 bg-white/70 px-6 py-3 font-medium text-primary shadow-sm transition hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white hover:shadow-md;
   }
   .card {
-    @apply rounded-lg bg-white p-6 shadow-md;
+    @apply rounded-lg border border-primary/10 bg-white/90 p-6 shadow-md backdrop-blur transition;
+  }
+  .surface-band {
+    @apply border-y border-primary/10 bg-white/55;
+  }
+  .surface-band-accent {
+    @apply border-y border-accent/20 bg-accent/10;
+  }
+  .surface-band-success {
+    @apply border-y border-success/20 bg-success/10;
+  }
+  .section-eyebrow {
+    @apply inline-flex items-center justify-center rounded-full border border-accent/25 bg-accent/10 px-4 py-1 text-sm font-bold text-accent;
+  }
+  .interactive-card {
+    @apply border border-primary/10 transition duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-xl;
   }
   .badge-status-new {
     @apply inline-flex items-center gap-1 rounded-full bg-accent/10 px-3 py-1 text-sm font-bold text-accent;

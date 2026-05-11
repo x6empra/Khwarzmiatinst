@@ -30,9 +30,9 @@ def verify_recaptcha(token: str | None, *, remote_ip: str | None = None) -> tupl
     if not token:
         return False, "missing_token"
 
-    payload = urlencode(
-        {"secret": secret, "response": token, "remoteip": remote_ip or ""}
-    ).encode("utf-8")
+    payload = urlencode({"secret": secret, "response": token, "remoteip": remote_ip or ""}).encode(
+        "utf-8"
+    )
 
     try:
         request = Request(VERIFY_URL, data=payload, method="POST")

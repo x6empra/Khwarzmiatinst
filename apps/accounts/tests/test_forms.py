@@ -1,5 +1,7 @@
 """Form tests — TESTING.md §Unit."""
 
+from typing import ClassVar
+
 import pytest
 
 from apps.accounts.factories import UserFactory
@@ -8,7 +10,7 @@ from apps.accounts.forms import LoginForm, RegisterForm
 
 @pytest.mark.django_db
 class TestRegisterForm:
-    BASE = {
+    BASE: ClassVar[dict[str, str]] = {
         "first_name": "أحمد",
         "last_name": "محمد",
         "email": "ahmed@test.com",
