@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
+from django.http import HttpRequest, HttpResponse
 from django.urls import include, path
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -18,7 +19,15 @@ from apps.landing.views import robots_txt
 from apps.packages.views import packages_page
 from apps.profile.views import overview as profile_overview
 
+
+def admin_short(request: HttpRequest) -> HttpResponse:
+    if admin.site.has_permission(request):
+        return admin.site.index(request)
+    return admin.site.login(request)
+
+
 urlpatterns = [
+    path("admin", admin_short, name="admin_short"),
     path("admin/", admin.site.urls),
     path("accounts", login_view, name="accounts_login_short"),
     path("accounts/", include("apps.accounts.urls")),

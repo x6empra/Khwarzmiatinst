@@ -12,9 +12,14 @@ from typing import (  # noqa: UP035 - loaded by system Python 3.6 before re-exec
 BASE_DIR = Path(__file__).resolve().parent
 VENV_PYTHON = BASE_DIR / "venv" / "bin" / "python"
 CPANEL_ROUTE_DIRS = (
+    "admin",
+    "admin/login",
     "accounts/login",
     "accounts/logout",
     "accounts/register",
+    "dashboard/leads",
+    "dashboard/packages",
+    "dashboard/users",
     "packages",
     "profile",
 )

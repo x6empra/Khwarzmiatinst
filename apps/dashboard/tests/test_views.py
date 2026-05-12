@@ -54,6 +54,13 @@ class TestLeadsList:
         assert response.status_code == 200
         assert b"ZooLead" in response.content
 
+    def test_short_url_supervisor_sees_leads(self, client):
+        client.force_login(SupervisorFactory())
+        LeadFactory(name="ShortLead")
+        response = client.get("/dashboard/leads")
+        assert response.status_code == 200
+        assert b"ShortLead" in response.content
+
     def test_filter_by_status(self, client):
         client.force_login(SupervisorFactory())
         LeadFactory(name="OPEN", status=LeadStatus.NEW)
@@ -168,6 +175,10 @@ class TestPackagesPage:
         client.force_login(ManagerFactory())
         assert client.get(self.URL).status_code == 200
 
+    def test_short_url_manager_can_view(self, client):
+        client.force_login(ManagerFactory())
+        assert client.get("/dashboard/packages").status_code == 200
+
 
 @pytest.mark.django_db
 class TestUsersPage:
@@ -181,6 +192,11 @@ class TestUsersPage:
         client.force_login(ManagerFactory())
         InvestorFactory()
         assert client.get(self.URL).status_code == 200
+
+    def test_short_url_manager_can_view(self, client):
+        client.force_login(ManagerFactory())
+        InvestorFactory()
+        assert client.get("/dashboard/users").status_code == 200
 
     def test_role_filter(self, client):
         client.force_login(ManagerFactory(email="m@x.com"))
