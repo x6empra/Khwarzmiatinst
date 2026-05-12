@@ -1,5 +1,7 @@
 """Root URL configuration — see API.md + INFRASTRUCTURE.md §3 (SEO)."""
 
+from typing import cast
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -19,6 +21,10 @@ from apps.landing.views import robots_txt
 from apps.packages.views import packages_page
 from apps.profile.views import overview as profile_overview
 
+admin.site.site_header = "إدارة خوارزميات"
+admin.site.site_title = "إدارة خوارزميات"
+admin.site.index_title = "لوحة التحكم"
+
 
 def admin_short(request: HttpRequest) -> HttpResponse:
     if admin.site.has_permission(request):
@@ -35,7 +41,7 @@ def admin_no_slash(request: HttpRequest, admin_path: str) -> HttpResponse:
     except Resolver404 as exc:
         raise Http404 from exc
     try:
-        return match.func(request, *match.args, **match.kwargs)
+        return cast(HttpResponse, match.func(request, *match.args, **match.kwargs))
     finally:
         request.path_info = original_path_info
 

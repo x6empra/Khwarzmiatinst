@@ -1,12 +1,13 @@
 """LeadAdmin — Supervisor + Manager (PERMISSIONS.md §API + Admin)."""
 
 from django.contrib import admin
+from django.http import HttpRequest
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from .models import Lead, LeadStatus
 
-STATUS_COLORS = {
+STATUS_COLORS: dict[str, str] = {
     LeadStatus.NEW: "#F39C12",  # accent
     LeadStatus.IN_PROGRESS: "#2563EB",  # blue
     LeadStatus.CLOSED: "#27AE60",  # success
@@ -15,7 +16,7 @@ STATUS_COLORS = {
 
 
 @admin.register(Lead)
-class LeadAdmin(admin.ModelAdmin):
+class LeadAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
     list_display = ("name", "phone", "email", "package", "status_badge", "investor", "created_at")
     list_filter = ("status", "package", "source")
     search_fields = ("name", "phone", "email", "notes")
@@ -41,9 +42,20 @@ class LeadAdmin(admin.ModelAdmin):
             obj.get_status_display(),
         )
 
-    # Manager only للحذف (PERMISSIONS.md §API.delete)
-    def has_delete_permission(self, request, obj=None) -> bool:
-        return bool(getattr(request.user, "is_manager", False) or request.user.is_superuser)
-
-    def has_module_permission(self, request) -> bool:
+    def _can_manage_leads(self, request: HttpRequest) -> bool:
         return bool(getattr(request.user, "is_staff_role", False) or request.user.is_superuser)
+
+    def has_view_permission(self, request: HttpRequest, obj: Lead | None = None) -> bool:
+        return self._can_manage_leads(request)
+
+    def has_add_permission(self, request: HttpRequest) -> bool:
+        return self._can_manage_leads(request)
+
+    def has_change_permission(self, request: HttpRequest, obj: Lead | None = None) -> bool:
+        return self._can_manage_leads(request)
+
+    def has_delete_permission(self, request: HttpRequest, obj: Lead | None = None) -> bool:
+        return self._can_manage_leads(request)
+
+    def has_module_permission(self, request: HttpRequest) -> bool:
+        return self._can_manage_leads(request)

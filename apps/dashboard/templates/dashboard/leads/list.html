@@ -1,33 +1,39 @@
 {% extends "dashboard/base.html" %}
-
 {% block dash_title %}الطلبات{% endblock %}
-
 {% block dash_content %}
-  <header class="mb-6">
-    <h1 class="text-2xl font-black text-primary md:text-3xl">إدارة الطلبات</h1>
-    <p class="mt-1 text-sm text-neutral-700">حدّث حالة الطلب فوراً، وتابع التواصل مع العملاء.</p>
+  <header class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-black text-primary md:text-3xl">إدارة الطلبات</h1>
+      <p class="mt-1 text-sm text-neutral-700">حدّث حالة الطلب فوراً، وتابع التواصل مع العملاء.</p>
+    </div>
+    <a href="{% url 'dashboard:lead_create' %}" class="btn-primary text-sm">إضافة طلب</a>
   </header>
-
   {# Filters + Search #}
-  <form method="get" class="card mb-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+  <form method="get"
+        class="card mb-4 flex flex-col gap-3 sm:flex-row sm:items-end">
     <div class="grow">
       <label for="q" class="mb-1 block text-sm font-bold text-primary">بحث</label>
-      <input type="search" name="q" id="q" value="{{ search }}" placeholder="اسم / جوال / إيميل"
+      <input type="search"
+             name="q"
+             id="q"
+             value="{{ search }}"
+             placeholder="اسم / جوال / إيميل"
              class="block w-full rounded-md border border-neutral-400 px-3 py-2 text-sm focus:border-accent focus:ring-2 focus:ring-accent">
     </div>
     <div>
       <label for="status" class="mb-1 block text-sm font-bold text-primary">الحالة</label>
-      <select name="status" id="status"
+      <select name="status"
+              id="status"
               class="block w-full rounded-md border border-neutral-400 px-3 py-2 text-sm focus:border-accent focus:ring-2 focus:ring-accent">
         <option value="">— الكل —</option>
         {% for value, display in status_choices %}
-          <option value="{{ value }}" {% if current_status == value %}selected{% endif %}>{{ display }}</option>
+          <option value="{{ value }}"
+                  {% if current_status == value %}selected{% endif %}>{{ display }}</option>
         {% endfor %}
       </select>
     </div>
     <button type="submit" class="btn-primary text-sm">تصفية</button>
   </form>
-
   {# Table #}
   {% if leads %}
     <div class="overflow-x-auto rounded-lg bg-white shadow-md">
@@ -55,9 +61,8 @@
       <p class="text-4xl mb-2" aria-hidden="true">🔍</p>
       <p class="font-bold text-primary">لا توجد طلبات تطابق هذا البحث</p>
       {% if current_status or search %}
-        <a href="{% url 'dashboard:leads' %}" class="mt-3 inline-block text-sm font-bold text-accent hover:text-accent-dark">
-          إزالة الفلاتر
-        </a>
+        <a href="{% url 'dashboard:leads' %}"
+           class="mt-3 inline-block text-sm font-bold text-accent hover:text-accent-dark">إزالة الفلاتر</a>
       {% endif %}
     </div>
   {% endif %}

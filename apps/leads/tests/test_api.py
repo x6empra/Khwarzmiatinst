@@ -133,12 +133,12 @@ class TestLeadDeleteAPI:
         assert response.status_code == 204
         assert not Lead.objects.filter(id=lead.id).exists()
 
-    def test_supervisor_403(self, client):
+    def test_supervisor_can_delete(self, client):
         client.force_login(SupervisorFactory())
         lead = LeadFactory()
         response = client.delete(f"/api/leads/{lead.id}/")
-        assert response.status_code == 403
-        assert Lead.objects.filter(id=lead.id).exists()
+        assert response.status_code == 204
+        assert not Lead.objects.filter(id=lead.id).exists()
 
     def test_investor_403(self, client):
         client.force_login(InvestorFactory())

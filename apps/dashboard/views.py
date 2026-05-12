@@ -15,7 +15,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET, require_http_methods
 
-from apps.leads.models import Lead, LeadStatus
+from apps.leads.forms import LeadForm
+from apps.leads.models import Lead, LeadSource, LeadStatus
 from apps.packages.models import Package
 
 from .decorators import manager_required, staff_required
@@ -76,6 +77,25 @@ def leads_list(request: HttpRequest) -> HttpResponse:
     )
 
 
+@require_http_methods(["GET", "POST"])
+@staff_required
+def lead_create(request: HttpRequest) -> HttpResponse:
+    """إضافة طلب من لوحة التحكم — Supervisor + Manager."""
+    if request.method == "POST":
+        form = LeadForm(request.POST)
+        if form.is_valid():
+            lead = form.save(commit=False)
+            lead.source = LeadSource.OTHER
+            lead.user_agent = "Dashboard"
+            lead.save()
+            messages.success(request, f"✓ تم إنشاء طلب «{lead.name}» بنجاح.")
+            return redirect("dashboard:lead_detail", pk=lead.pk)
+    else:
+        form = LeadForm()
+
+    return render(request, "dashboard/leads/form.html", {"form": form})
+
+
 @require_GET
 @staff_required
 def lead_detail(request: HttpRequest, pk: int) -> HttpResponse:
@@ -113,9 +133,9 @@ def lead_status_change(request: HttpRequest, pk: int) -> HttpResponse:
 
 
 @require_http_methods(["DELETE", "POST"])  # POST مع _method=DELETE لـ legacy
-@manager_required
+@staff_required
 def lead_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    """DELETE /dashboard/leads/<id>/ — Manager only."""
+    """DELETE /dashboard/leads/<id>/ — Supervisor + Manager."""
     lead = get_object_or_404(Lead, pk=pk)
     lead.delete()
     return HttpResponse("", status=200)  # HTMX يحذف الصف من DOM

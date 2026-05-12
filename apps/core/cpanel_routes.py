@@ -30,6 +30,7 @@ STATIC_ROUTE_DIRS = (
     "core/healthz",
     "dashboard",
     "dashboard/leads",
+    "dashboard/leads/new",
     "dashboard/packages",
     "dashboard/packages/new",
     "dashboard/users",

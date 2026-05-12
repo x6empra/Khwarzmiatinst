@@ -19,7 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.permissions import IsManager, IsSupervisor
+from apps.accounts.permissions import IsSupervisor
 
 from .forms import LeadForm
 from .models import Lead, LeadStatus
@@ -152,8 +152,8 @@ class LeadStatusUpdateAPIView(APIView):
 
 
 class LeadDeleteAPIView(generics.DestroyAPIView):
-    """DELETE /api/leads/<id>/ — IsManager only."""
+    """DELETE /api/leads/<id>/ — Supervisor + Manager."""
 
     queryset = Lead.objects.all()
-    permission_classes = (IsAuthenticated, IsManager)
+    permission_classes = (IsAuthenticated, IsSupervisor)
     lookup_field = "pk"

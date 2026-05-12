@@ -1,0 +1,28 @@
+{% extends "dashboard/base.html" %}
+{% block dash_title %}إضافة طلب{% endblock %}
+{% block dash_content %}
+  <header class="mb-6">
+    <p class="text-xs font-bold text-neutral-700">إدارة الطلبات</p>
+    <h1 class="text-2xl font-black text-primary md:text-3xl">إضافة طلب</h1>
+  </header>
+  <form method="post" class="card max-w-2xl space-y-4">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="rounded-md bg-red-50 p-3 text-sm text-red-700" role="alert">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+    {% for field in form.visible_fields %}
+      <div>
+        <label for="{{ field.id_for_label }}"
+               class="mb-1 block text-sm font-bold text-primary">{{ field.label }}</label>
+        {{ field }}
+        {% for error in field.errors %}<p class="mt-1 text-sm text-red-600" role="alert">{{ error }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+    <div class="flex flex-wrap gap-3 pt-2">
+      <button type="submit" class="btn-primary text-sm">حفظ الطلب</button>
+      <a href="{% url 'dashboard:leads' %}" class="btn-secondary text-sm">إلغاء</a>
+    </div>
+  </form>
+{% endblock %}

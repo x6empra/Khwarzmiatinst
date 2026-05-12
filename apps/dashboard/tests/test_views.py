@@ -5,7 +5,8 @@ from django.urls import reverse
 
 from apps.accounts.factories import InvestorFactory, ManagerFactory, SupervisorFactory
 from apps.leads.factories import LeadFactory
-from apps.leads.models import LeadStatus, StatusHistory
+from apps.leads.models import Lead, LeadStatus, StatusHistory
+from apps.packages.factories import PackageFactory
 
 
 @pytest.mark.django_db
@@ -76,6 +77,54 @@ class TestLeadsList:
         response = client.get(self.URL + "?q=UniqueName")
         assert b"UniqueName" in response.content
         assert b"OtherPerson" not in response.content
+
+
+@pytest.mark.django_db
+class TestLeadCreate:
+    URL = reverse("dashboard:lead_create")
+
+    def test_supervisor_can_view_form(self, client):
+        client.force_login(SupervisorFactory())
+        response = client.get(self.URL)
+        assert response.status_code == 200
+        assert "إضافة طلب".encode() in response.content
+
+    def test_manager_can_create(self, client):
+        package = PackageFactory()
+        client.force_login(ManagerFactory())
+        response = client.post(
+            self.URL,
+            {
+                "name": "طلب يدوي",
+                "phone": "0501234567",
+                "email": "manual@x.test",
+                "package": package.id,
+                "notes": "من لوحة التحكم",
+            },
+        )
+        lead = Lead.objects.get(email="manual@x.test")
+        assert response.status_code == 302
+        assert response.url == reverse("dashboard:lead_detail", args=[lead.id])
+
+    def test_supervisor_can_create(self, client):
+        package = PackageFactory()
+        client.force_login(SupervisorFactory())
+        response = client.post(
+            self.URL,
+            {
+                "name": "طلب مشرف",
+                "phone": "0501234567",
+                "email": "supervisor-manual@x.test",
+                "package": package.id,
+                "notes": "",
+            },
+        )
+        assert response.status_code == 302
+        assert Lead.objects.filter(email="supervisor-manual@x.test").exists()
+
+    def test_investor_403(self, client):
+        client.force_login(InvestorFactory())
+        assert client.get(self.URL).status_code == 403
 
 
 @pytest.mark.django_db
@@ -180,11 +229,12 @@ class TestLeadDelete:
 
         assert not Lead.objects.filter(id=lead.id).exists()
 
-    def test_supervisor_403(self, client):
+    def test_supervisor_can_delete(self, client):
         client.force_login(SupervisorFactory())
         lead = LeadFactory()
         response = client.delete(reverse("dashboard:lead_delete", args=[lead.id]))
-        assert response.status_code == 403
+        assert response.status_code == 200
+        assert not Lead.objects.filter(id=lead.id).exists()
 
 
 @pytest.mark.django_db

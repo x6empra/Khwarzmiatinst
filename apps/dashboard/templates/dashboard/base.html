@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
-
-{% block title %}{% block dash_title %}لوحة الإدارة{% endblock %} — خوارزميات{% endblock %}
-
+{% block title %}
+  {% block dash_title %}لوحة الإدارة{% endblock %}
+  — خوارزميات
+{% endblock %}
 {% block content %}
   <div class="grid gap-6 lg:grid-cols-[260px_1fr]">
     {# Sidebar #}
@@ -11,61 +12,68 @@
         <p class="mb-1 text-xs opacity-80">مرحباً، {{ user.first_name }}</p>
         <p class="text-sm font-bold">{{ user.get_role_display }}</p>
       </div>
-
-      <nav class="mt-4 rounded-lg bg-white p-2 shadow-md" aria-label="قائمة لوحة الإدارة">
+      <nav class="mt-4 rounded-lg bg-white p-2 shadow-md"
+           aria-label="قائمة لوحة الإدارة">
         <ul class="space-y-1">
           <li>
             <a href="{% url 'dashboard:home' %}"
                class="block rounded-md px-4 py-2 text-sm font-bold transition
-                      {% if request.resolver_match.url_name == 'home' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
-              📊 الرئيسية
-            </a>
+                      {% if request.resolver_match.url_name == 'home' %}
+                        bg-accent text-white
+                      {% else %}
+                        text-primary hover:bg-neutral-100
+                      {% endif %}">📊 الرئيسية</a>
           </li>
           <li>
             <a href="{% url 'dashboard:leads' %}"
                class="block rounded-md px-4 py-2 text-sm font-bold transition
-                      {% if request.resolver_match.url_name == 'leads' or request.resolver_match.url_name == 'lead_detail' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
-              📝 الطلبات
-            </a>
+                      {% if request.resolver_match.url_name == 'leads' or request.resolver_match.url_name == 'lead_detail' %}
+                        bg-accent text-white
+                      {% else %}
+                        text-primary hover:bg-neutral-100
+                      {% endif %}">📝 الطلبات</a>
           </li>
           {% if user.is_manager %}
             <li>
               <a href="{% url 'dashboard:packages' %}"
                  class="block rounded-md px-4 py-2 text-sm font-bold transition
-                        {% if request.resolver_match.url_name == 'packages' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
-                📦 الباقات
-              </a>
+                        {% if request.resolver_match.url_name == 'packages' %}
+                          bg-accent text-white
+                        {% else %}
+                          text-primary hover:bg-neutral-100
+                        {% endif %}">📦 الباقات</a>
             </li>
             <li>
               <a href="{% url 'dashboard:users' %}"
                  class="block rounded-md px-4 py-2 text-sm font-bold transition
-                        {% if request.resolver_match.url_name == 'users' %}bg-accent text-white{% else %}text-primary hover:bg-neutral-100{% endif %}">
-                👥 المستخدمون
-              </a>
+                        {% if request.resolver_match.url_name == 'users' %}
+                          bg-accent text-white
+                        {% else %}
+                          text-primary hover:bg-neutral-100
+                        {% endif %}">👥 المستخدمون</a>
             </li>
           {% endif %}
           <li class="border-t border-neutral-100 pt-2 mt-2">
             <a href="/admin/"
-               class="block rounded-md px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
-              ⚙️ Django Admin
-            </a>
+               class="block rounded-md px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">⚙️ لوحة التحكم</a>
           </li>
         </ul>
       </nav>
     </aside>
-
     {# Main content #}
     <main>
       {% if messages %}
         <div class="mb-4 space-y-2">
           {% for msg in messages %}
             <div class="rounded-md p-3 text-sm
-                        {% if msg.tags == 'success' %}bg-success/10 text-success border border-success/30
-                        {% elif msg.tags == 'error' %}bg-red-50 text-red-700 border border-red-200
-                        {% else %}bg-neutral-100 text-neutral-900{% endif %}"
-                 role="alert">
-              {{ msg }}
-            </div>
+                        {% if msg.tags == 'success' %}
+                          bg-success/10 text-success border border-success/30
+                        {% elif msg.tags == 'error' %}
+                          bg-red-50 text-red-700 border border-red-200
+                        {% else %}
+                          bg-neutral-100 text-neutral-900
+                        {% endif %}"
+                 role="alert">{{ msg }}</div>
           {% endfor %}
         </div>
       {% endif %}
