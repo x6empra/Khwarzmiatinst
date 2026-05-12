@@ -6,7 +6,10 @@ app_name = "accounts"
 
 urlpatterns = [
     path("", views.login_view, name="login"),
+    path("register", views.register, name="register_short"),
     path("register/", views.register, name="register"),
+    path("login", views.login_view, name="login_short"),
     path("login/", views.login_view, name="login_legacy"),
+    path("logout", views.logout_view, name="logout_short"),
     path("logout/", views.logout_view, name="logout"),
 ]

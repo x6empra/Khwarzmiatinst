@@ -18,7 +18,20 @@ class TestOverview:
     def test_anonymous_redirects(self, client):
         response = client.get(self.URL)
         assert response.status_code == 302
-        assert "login" in response.url
+        assert response.url.startswith("/accounts/")
+
+    def test_short_profile_url_redirects_anonymous(self, client):
+        response = client.get("/profile")
+        assert response.status_code == 302
+        assert response.url.startswith("/accounts/")
+
+    def test_short_profile_url_investor_can_view(self, client):
+        client.force_login(InvestorFactory(email="short@x.com"))
+        response = client.get("/profile")
+        assert response.status_code == 200
+        assert (
+            b"\xd8\xa8\xd9\x8a\xd8\xa7\xd9\x86\xd8\xa7\xd8\xaa\xd9\x8a" in response.content
+        )  # "بياناتي"
 
     def test_supervisor_403(self, client):
         client.force_login(SupervisorFactory())

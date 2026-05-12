@@ -87,6 +87,12 @@ class TestPackagesPage:
         assert response.status_code == 200
         assert "ظاهرة".encode() in response.content
 
+    def test_short_packages_url_renders_page(self, client):
+        PackageFactory(name="ظاهرة")
+        response = client.get("/packages")
+        assert response.status_code == 200
+        assert "ظاهرة".encode() in response.content
+
     def test_empty_state_when_no_packages(self, client):
         response = client.get(self.URL)
         assert response.status_code == 200

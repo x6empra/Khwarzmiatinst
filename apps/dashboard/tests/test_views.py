@@ -15,7 +15,7 @@ class TestDashboardHome:
     def test_anonymous_redirects_to_login(self, client):
         response = client.get(self.URL)
         assert response.status_code == 302
-        assert "login" in response.url
+        assert response.url.startswith("/accounts/")
 
     def test_investor_403(self, client):
         client.force_login(InvestorFactory())

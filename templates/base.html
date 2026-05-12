@@ -308,7 +308,10 @@
             <ul class="space-y-2 text-sm text-white/85">
               {% if user.is_authenticated %}
                 <li>
-                  <a href="{% url 'accounts:logout' %}" class="hover:text-accent">تسجيل الخروج</a>
+                  <form method="post" action="{% url 'accounts:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="hover:text-accent">تسجيل الخروج</button>
+                  </form>
                 </li>
               {% else %}
                 <li>

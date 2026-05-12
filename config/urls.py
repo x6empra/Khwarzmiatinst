@@ -15,17 +15,21 @@ from apps.accounts.views import login_view
 from apps.dashboard.views import dashboard_home
 from apps.landing.sitemaps import sitemaps_dict
 from apps.landing.views import robots_txt
+from apps.packages.views import packages_page
+from apps.profile.views import overview as profile_overview
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts", login_view, name="accounts_login_short"),
     path("accounts/", include("apps.accounts.urls")),
+    path("packages", packages_page, name="packages_list_short"),
     path("packages/", include("apps.packages.urls")),
     path("api/packages/", include("apps.packages.api_urls")),
     path("api/leads/", include("apps.leads.urls")),
     path("dashboard", dashboard_home, name="dashboard_home_short"),
     path("dashboard/", include("apps.dashboard.urls")),
     # Profile (F9 + F10)
+    path("profile", profile_overview, name="profile_overview_short"),
     path("profile/", include("apps.profile.urls")),
     path("api/profile/", include("apps.profile.api_urls")),
     # SEO (INFRASTRUCTURE.md §3)

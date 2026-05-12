@@ -14,6 +14,11 @@ class TestRegisterView:
         assert response.status_code == 200
         assert b"\xd8\xa5\xd9\x86\xd8\xb4\xd8\xa7\xd8\xa1" in response.content  # "إنشاء"
 
+    def test_short_register_url_renders_form(self, client):
+        response = client.get("/accounts/register")
+        assert response.status_code == 200
+        assert b"\xd8\xa5\xd9\x86\xd8\xb4\xd8\xa7\xd8\xa1" in response.content  # "إنشاء"
+
     def test_post_creates_user_and_logs_in(self, client):
         response = client.post(
             reverse("accounts:register"),
@@ -79,8 +84,16 @@ class TestLogoutView:
         assert response.status_code == 302
         assert "_auth_user_id" not in client.session
 
-    def test_logout_get_not_allowed(self, client):
+    def test_logout_get_renders_confirmation(self, client):
         user = InvestorFactory()
         client.force_login(user)
         response = client.get(reverse("accounts:logout"))
-        assert response.status_code == 405  # Method not allowed
+        assert response.status_code == 200
+        assert "تسجيل الخروج".encode() in response.content
+
+    def test_short_logout_url_renders_confirmation(self, client):
+        user = InvestorFactory()
+        client.force_login(user)
+        response = client.get("/accounts/logout")
+        assert response.status_code == 200
+        assert "تسجيل الخروج".encode() in response.content

@@ -6,6 +6,7 @@ Auth views — register / login / logout.
 
 from django.conf import settings
 from django.contrib.auth import login, logout
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
@@ -16,7 +17,7 @@ REMEMBER_ME_AGE = 30 * 24 * 60 * 60  # 30 يوماً (PERMISSIONS.md)
 
 
 @require_http_methods(["GET", "POST"])
-def register(request):
+def register(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         return redirect(_post_login_redirect(request.user))
 
@@ -31,11 +32,11 @@ def register(request):
 
 
 @require_http_methods(["GET", "POST"])
-def login_view(request):
+def login_view(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         return redirect(_post_login_redirect(request.user))
 
-    form = LoginForm(request.POST or None, request=request)
+    form = LoginForm(request.POST or None, request=request)  # type: ignore[no-untyped-call]
     if request.method == "POST" and form.is_valid():
         user = form.get_user()
         login(request, user)
@@ -49,13 +50,18 @@ def login_view(request):
     return render(request, "account/login.html", {"form": form})
 
 
-@require_http_methods(["POST"])
-def logout_view(request):
+@require_http_methods(["GET", "POST"])
+def logout_view(request: HttpRequest) -> HttpResponse:
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return redirect("landing:home")
+        return render(request, "account/logout_confirm.html")
+
     logout(request)
     return redirect("landing:home")
 
 
-def _post_login_redirect(user) -> str:
+def _post_login_redirect(user: object) -> str:
     """مكان التوجيه بعد الدخول حسب الدور (يُحدَّث في المراحل اللاحقة)."""
     if getattr(user, "is_staff_role", False):
         return "/dashboard" if _has_dashboard() else reverse("landing:home")
