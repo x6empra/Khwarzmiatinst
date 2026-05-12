@@ -36,6 +36,8 @@ SESSION_COOKIE_SAMESITE = "Lax"
 PUBLIC_DIR = BASE_DIR.parent / "public"
 STATIC_ROOT = PUBLIC_DIR / "static"
 MEDIA_ROOT = PUBLIC_DIR / "media"
+CPANEL_ROUTE_SYNC_ENABLED = True
+CPANEL_PUBLIC_DIR = PUBLIC_DIR
 
 DATABASES = {
     "default": dj_database_url.parse(

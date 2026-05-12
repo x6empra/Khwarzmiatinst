@@ -11,18 +11,6 @@ from typing import (  # noqa: UP035 - loaded by system Python 3.6 before re-exec
 
 BASE_DIR = Path(__file__).resolve().parent
 VENV_PYTHON = BASE_DIR / "venv" / "bin" / "python"
-CPANEL_ROUTE_DIRS = (
-    "admin",
-    "admin/login",
-    "accounts/login",
-    "accounts/logout",
-    "accounts/register",
-    "dashboard/leads",
-    "dashboard/packages",
-    "dashboard/users",
-    "packages",
-    "profile",
-)
 
 
 def _restart_with_venv_python() -> None:
@@ -40,22 +28,6 @@ def _restart_with_venv_python() -> None:
 
 _restart_with_venv_python()
 
-
-def _ensure_cpanel_route_dirs() -> None:
-    public_dir = BASE_DIR.parent / "public"
-    if not public_dir.exists():
-        return
-
-    # cPanel only dispatches mounted clean URLs after a matching public dir exists.
-    for route in CPANEL_ROUTE_DIRS:
-        try:
-            (public_dir / route).mkdir(parents=True, exist_ok=True)
-        except OSError:
-            continue
-
-
-_ensure_cpanel_route_dirs()
-
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
@@ -64,6 +36,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.cpanel")
 from django.core.wsgi import get_wsgi_application  # noqa: E402
 
 django_application = get_wsgi_application()
+
+from apps.core.cpanel_routes import sync_all_cpanel_route_dirs  # noqa: E402
+
+sync_all_cpanel_route_dirs()
 StartResponse = Callable[..., object]
 
 

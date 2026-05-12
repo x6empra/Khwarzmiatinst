@@ -8,6 +8,8 @@ Signals for accounts.
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
+from apps.core.cpanel_routes import ensure_admin_instance_route_dirs
+
 from .models import Role, User, UserProfile
 
 
@@ -23,3 +25,4 @@ def ensure_profile_exists(sender, instance: User, created: bool, **kwargs) -> No
     """ينشئ UserProfile تلقائياً عند إنشاء مستخدم جديد (F9)."""
     if created:
         UserProfile.objects.get_or_create(user=instance)
+    ensure_admin_instance_route_dirs(instance)

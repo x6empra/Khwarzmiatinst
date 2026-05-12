@@ -8,6 +8,8 @@ app_name = "investor_profile"
 
 urlpatterns = [
     path("", views.overview, name="overview"),
+    path("password", views.password_change, name="password_short"),
     path("password/", views.password_change, name="password"),
+    path("orders", views.orders, name="orders_short"),
     path("orders/", views.orders, name="orders"),
 ]

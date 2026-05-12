@@ -4,8 +4,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.http import HttpRequest, HttpResponse
-from django.urls import include, path
+from django.http import Http404, HttpRequest, HttpResponse
+from django.urls import Resolver404, include, path, re_path, resolve
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -26,8 +26,23 @@ def admin_short(request: HttpRequest) -> HttpResponse:
     return admin.site.login(request)
 
 
+def admin_no_slash(request: HttpRequest, admin_path: str) -> HttpResponse:
+    resolved_path = f"/admin/{admin_path}/"
+    original_path_info = request.path_info
+    request.path_info = resolved_path
+    try:
+        match = resolve(resolved_path)
+    except Resolver404 as exc:
+        raise Http404 from exc
+    try:
+        return match.func(request, *match.args, **match.kwargs)
+    finally:
+        request.path_info = original_path_info
+
+
 urlpatterns = [
     path("admin", admin_short, name="admin_short"),
+    re_path(r"^admin/(?P<admin_path>.+[^/])$", admin_no_slash, name="admin_no_slash"),
     path("admin/", admin.site.urls),
     path("accounts", login_view, name="accounts_login_short"),
     path("accounts/", include("apps.accounts.urls")),

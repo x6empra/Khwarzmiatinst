@@ -133,6 +133,9 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+CPANEL_ROUTE_SYNC_ENABLED = False
+CPANEL_PUBLIC_DIR = BASE_DIR.parent / "public"
+CPANEL_MAX_ROUTE_DIRS_PER_MODEL = 5000
 
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},

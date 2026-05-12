@@ -100,6 +100,11 @@ class TestPasswordChange:
         client.force_login(InvestorFactory())
         assert client.get(self.URL).status_code == 200
 
+    def test_short_url_investor_can_view(self, client):
+        client.force_login(InvestorFactory(email="password-short@x.com"))
+        response = client.get("/profile/password")
+        assert response.status_code == 200
+
     def test_changes_password(self, client):
         user = InvestorFactory(email="me@x.com", password="OldP@ss123")
         client.force_login(user)
@@ -152,6 +157,11 @@ class TestOrders:
     def test_supervisor_403(self, client):
         client.force_login(SupervisorFactory())
         assert client.get(self.URL).status_code == 403
+
+    def test_short_url_investor_can_view(self, client):
+        client.force_login(InvestorFactory(email="orders-short@x.com"))
+        response = client.get("/profile/orders")
+        assert response.status_code == 200
 
     def test_investor_sees_only_own(self, client):
         from apps.packages.factories import PackageFactory

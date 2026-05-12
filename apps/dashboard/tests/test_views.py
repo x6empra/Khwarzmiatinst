@@ -80,6 +80,13 @@ class TestLeadsList:
 
 @pytest.mark.django_db
 class TestLeadDetail:
+    def test_short_url_supervisor_can_view(self, client):
+        client.force_login(SupervisorFactory())
+        lead = LeadFactory(name="ShortDetail")
+        response = client.get(f"/dashboard/leads/{lead.id}")
+        assert response.status_code == 200
+        assert b"ShortDetail" in response.content
+
     def test_supervisor_can_view(self, client):
         client.force_login(SupervisorFactory())
         lead = LeadFactory(name="DetailUser")
@@ -105,6 +112,14 @@ class TestStatusHTMX:
         client.force_login(SupervisorFactory())
         lead = LeadFactory(status=LeadStatus.NEW)
         response = client.post(self.url(lead), {"status": "in_progress"})
+        assert response.status_code == 200
+        lead.refresh_from_db()
+        assert lead.status == LeadStatus.IN_PROGRESS
+
+    def test_short_url_supervisor_changes_status(self, client):
+        client.force_login(SupervisorFactory())
+        lead = LeadFactory(status=LeadStatus.NEW)
+        response = client.post(f"/dashboard/leads/{lead.id}/status", {"status": "in_progress"})
         assert response.status_code == 200
         lead.refresh_from_db()
         assert lead.status == LeadStatus.IN_PROGRESS
@@ -156,6 +171,15 @@ class TestLeadDelete:
 
         assert not Lead.objects.filter(id=lead.id).exists()
 
+    def test_short_url_manager_can_delete(self, client):
+        client.force_login(ManagerFactory())
+        lead = LeadFactory()
+        response = client.delete(f"/dashboard/leads/{lead.id}/delete")
+        assert response.status_code == 200
+        from apps.leads.models import Lead
+
+        assert not Lead.objects.filter(id=lead.id).exists()
+
     def test_supervisor_403(self, client):
         client.force_login(SupervisorFactory())
         lead = LeadFactory()
@@ -178,6 +202,13 @@ class TestPackagesPage:
     def test_short_url_manager_can_view(self, client):
         client.force_login(ManagerFactory())
         assert client.get("/dashboard/packages").status_code == 200
+
+    def test_short_edit_url_manager_can_view(self, client):
+        client.force_login(ManagerFactory())
+        from apps.packages.factories import PackageFactory
+
+        package = PackageFactory()
+        assert client.get(f"/dashboard/packages/{package.id}/edit").status_code == 200
 
 
 @pytest.mark.django_db
